@@ -23,6 +23,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { register, clearError } from '../store/slices/authSlice';
 import { AppDispatch, RootState } from '../store';
+import logo from '../assets/logo_2cents_white.svg';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -163,7 +164,9 @@ const Register: React.FC = () => {
             alignItems: 'center',
             p: 4,
           }}
-        />
+        >
+          <img src={logo} alt="Logo 2Cents" style={{ height: 'auto' }} />
+        </Box>
       )}
       
       <Box
@@ -332,7 +335,9 @@ const Register: React.FC = () => {
             justifyContent: 'center',
             p: 4,
           }}
-        />
+        >
+          <img src={logo} alt="Logo Planejja" style={{ maxWidth: '80%', height: 'auto' }} />
+        </Box>
       )}
 
       <Snackbar

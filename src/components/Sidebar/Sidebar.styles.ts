@@ -18,7 +18,6 @@ export const TopSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 0 16px 0;
   position: relative;
 `;
 

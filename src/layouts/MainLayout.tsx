@@ -64,10 +64,10 @@ const MainLayout: React.FC = () => {
         <HamburgerButton onClick={handleSidebarOpen} aria-label="Abrir menu">
           <FaBars />
         </HamburgerButton>
-        <IconButton ref={bellRef} onClick={() => setShowNotifications(prev => !prev)} aria-label="Notificações">
+        {/* <IconButton ref={bellRef} onClick={() => setShowNotifications(prev => !prev)} aria-label="Notificações">
           <FaRegBell color="#fff" size={22} />
           {unreadCount > 0 && <NotificationDot>{unreadCount}</NotificationDot>}
-        </IconButton>
+        </IconButton> */}
         {showNotifications && <>
           <OverlayNotification onClick={() => setShowNotifications(false)} />
           <MobileNotificationPanelWrapper ref={panelRef}>

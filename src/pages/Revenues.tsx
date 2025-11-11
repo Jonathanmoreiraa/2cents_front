@@ -19,7 +19,7 @@ import theme from '../theme';
 const headers: DataTableHeader<Revenue>[] = [
   { label: 'Situação', key: 'status' },
   { label: 'Descrição', key: 'description' },
-  { label: 'Data', key: 'dueDate' },
+  { label: 'Recebimento', key: 'dueDate' },
   { label: 'Valor', key: 'value', align: 'right' },
 ];
 

@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaRegBell, FaChartBar, FaMoneyBillWave, FaWallet, FaCog, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
-import NotificationPanel from './NotificationPanel';
+import { FaChartBar, FaMoneyBillWave, FaWallet, FaCog, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
+// import NotificationPanel from './NotificationPanel';
 import {
   SidebarContainer,
   TopSection,
-  AvatarImg,
-  BellWrapper,
-  NotificationDot,
+  // AvatarImg,
+  // BellWrapper,
+  // NotificationDot,
   Menu,
   MenuItem,
   SubMenu,
@@ -17,41 +17,43 @@ import {
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material';
-import { OverlayNotification } from '../../layouts/MainLayout.styles';
+import { Box } from '@mui/material';
+import logo from '../../assets/logo_2cents_white.svg';
+// import { useMediaQuery } from '@mui/material';
+// import { OverlayNotification } from '../../layouts/MainLayout.styles';
 
 // TODO: Depois da criação da rota de notificações, substituir por uma requisição ao backend
-const mockNotifications = [
-  {
-    id: 1,
-    title: 'Notificação 1',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac dignissim neque. Duis tincidunt tincidunt odio vel tempus. Morbi egestas tristique metus. Fusce dapibus euismod efficitur. Quisque dignissim neque...'
-    , read: false
-  },
-  {
-    id: 2,
-    title: 'Notificação 2',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac dignissim neque. Duis tincidunt tincidunt odio vel tempus. Morbi egestas tristique metus. Fusce dapibus euismod efficitur. Quisque dignissim neque...'
-    , read: false
-  },
-  {
-    id: 3,
-    title: 'Notificação 3',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac dignissim neque. Duis tincidunt tincidunt odio vel tempus. Morbi egestas tristique metus. Fusce dapibus euismod efficitur. Quisque dignissim neque...'
-    , read: true
-  }
-];
+// const mockNotifications = [
+//   {
+//     id: 1,
+//     title: 'Notificação 1',
+//     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac dignissim neque. Duis tincidunt tincidunt odio vel tempus. Morbi egestas tristique metus. Fusce dapibus euismod efficitur. Quisque dignissim neque...'
+//     , read: false
+//   },
+//   {
+//     id: 2,
+//     title: 'Notificação 2',
+//     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac dignissim neque. Duis tincidunt tincidunt odio vel tempus. Morbi egestas tristique metus. Fusce dapibus euismod efficitur. Quisque dignissim neque...'
+//     , read: false
+//   },
+//   {
+//     id: 3,
+//     title: 'Notificação 3',
+//     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac dignissim neque. Duis tincidunt tincidunt odio vel tempus. Morbi egestas tristique metus. Fusce dapibus euismod efficitur. Quisque dignissim neque...'
+//     , read: true
+//   }
+// ];
 
 const Sidebar: React.FC = () => {
   const [financasOpen, setFinancasOpen] = useState(false);
   const [selected, setSelected] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(mockNotifications);
+  // const [notifications, setNotifications] = useState(mockNotifications);
   const panelRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery('(max-width:900px)');
+ /*  const isMobile = useMediaQuery('(max-width:900px)');
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -62,9 +64,9 @@ const Sidebar: React.FC = () => {
   const putNotification = async (data: object) => {
     await fetch('/api/notification', { method: 'PUT', body: JSON.stringify(data) });
     return new Promise(resolve => setTimeout(resolve, 300));
-  };
+  }; */
 
-  const handleCloseNotification = async (id: number) => {
+  /* const handleCloseNotification = async (id: number) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
     await putNotification({ id, read: true });
   };
@@ -77,7 +79,7 @@ const Sidebar: React.FC = () => {
   const handleMarkRead = async (id: number) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     await putNotification({ id, read: true });
-  };
+  }; */
 
   const handleLogout = () => {
     dispatch(logout());
@@ -109,7 +111,7 @@ const Sidebar: React.FC = () => {
     <SidebarContainer>
       <TopSection>
         {/* TODO: Adicionar imagem padrão aqui para todos e o usuário poderá mudar para o dele */}
-        <AvatarImg src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" />
+        {/* <AvatarImg src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" />
         {!isMobile && (
           <BellWrapper ref={bellRef}>
             <FaRegBell size={24} onClick={handleBellClick} style={{ cursor: 'pointer' }} />
@@ -126,10 +128,23 @@ const Sidebar: React.FC = () => {
               onMarkRead={handleMarkRead}
             />
           </div>
-        </>}
+        </>} */}
+        <Box
+          sx={{
+            width: '80%',
+            bgcolor: '#358156',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: "-16px"
+          }}
+        >
+          <img src={logo} alt="Logo Planejja" style={{ maxWidth: '80%', height: 96 }} />
+        </Box>
       </TopSection>
       <Menu>
-        <MenuItem selected={selected === 'Dashboard'} onClick={() => {setSelected('Dashboard'); setFinancasOpen(false); navigate('/')}}>
+        <MenuItem style={{marginTop: "-16px"}} selected={selected === 'Dashboard'} onClick={() => {setSelected('Dashboard'); setFinancasOpen(false); navigate('/')}}>
           <FaChartBar style={{ marginRight: 16 }} /> Dashboard
         </MenuItem>
         <MenuItem selected={selected === 'Receitas' || selected === 'Despesas'} onClick={() => {setFinancasOpen(!financasOpen); setSelected("Finanças")}}>

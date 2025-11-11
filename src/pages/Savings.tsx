@@ -9,11 +9,13 @@ import { Saving } from '../types';
 //import { GenericCardListHeader } from '../components/DataTable/GenericCardList';
 import theme from '../theme';
 import api from '../services/api';
+import SavingCreateModal from '../components/Modal/SavingCreateModal';
+import SimulationModal from '../components/Modal/SimulationModal';
 
 const headers: DataTableHeader<Saving>[] = [
   { label: 'Prioridade', key: 'priority' },
   { label: 'Descrição', key: 'description' },
-  { label: 'Valor Acumulado', key: 'value' },
+  { label: 'Valor Acumulado', key: 'accumulated' },
   { label: 'Meta', key: 'goal', align: 'inherit'},
 ];
 
@@ -28,6 +30,8 @@ const Savings: React.FC = () => {
   const ITEMS_PER_PAGE = 10;
   const [page, setPage] = useState(1);  
   const [savings, setSavings] = useState<Saving[]>([]);
+  const [modalAddOpen, setModalAddOpen] = useState(false);
+  const [modalSimulationOpen, setModalSimulationOpen] = useState(false);
   const [, setSavingData] = useState<Saving | null>(null);
   const [, setEditModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,17 +39,33 @@ const Savings: React.FC = () => {
   const [error, setError] = useState('');
   const [openError, setOpenError] = useState(false);
   const handleCloseError = () => setOpenError(false);
+  const totalPages = Math.max(1, Math.ceil(savings.length / ITEMS_PER_PAGE));
   const paginated = savings.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  const handleOpenAddModal = () => setModalAddOpen(true);
+  const handleOpenSimulationModal = () => setModalSimulationOpen(true);
+  const handleCloseAddModal = () => setModalAddOpen(false);
+  const handleCloseSimulationModal = () => setModalSimulationOpen(false);
 
   const handleOpenEditModal = (data: Saving) => {
     setSavingData(data);
     setEditModalOpen(true);
   };
 
+  const handleCreateSaving = async (data: object) => {
+    try {
+      await api.post('/api/saving/add', data);
+      handleGetSavings();
+      handleCloseAddModal();
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
   const handleGetSavings = async () => {
     try {
-      //const res = await api.get('/api/savings')
-      setSavings([]);
+      const res = await api.get('/api/savings')
+      setSavings(res.data);
     } catch (err) {
       handleError(err);
     }
@@ -62,7 +82,7 @@ const Savings: React.FC = () => {
    const handleDelete = async (id: number) => {
     try {
       if (!window.confirm('Tem certeza que deseja deletar esta caixinha?')) return;
-      await api.delete(`/api/revenue/${id}`);
+      await api.delete(`/api/saving/${id}`);
       handleGetSavings();
     } catch (err) {
       handleError(err);
@@ -90,12 +110,21 @@ const Savings: React.FC = () => {
     }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
         <Stack direction="row" spacing={2}>
-          <ActionButton variant='outlined' color="success" endIcon={<WalletIcon />}>Simulação</ActionButton>
+          <ActionButton variant='outlined' color="success" onClick={handleOpenSimulationModal} endIcon={<WalletIcon />}>Simulação</ActionButton>
         </Stack>
         <Stack direction="row" spacing={2}>
-          <ActionButton variant='outlined' color="success">Cadastrar</ActionButton>
+          <ActionButton variant='outlined' color="success" onClick={handleOpenAddModal}>Cadastrar</ActionButton>
         </Stack>
       </Stack>
+      <SavingCreateModal
+        open={modalAddOpen}
+        onClose={handleCloseAddModal}
+        onSubmit={handleCreateSaving}
+      />
+      <SimulationModal 
+        open={modalSimulationOpen}
+        onClose={handleCloseSimulationModal}
+      />
       {isMobile ? (
         <div></div>
       ) : (
@@ -103,8 +132,10 @@ const Savings: React.FC = () => {
           items={paginated}
           headers={headers}
           renderCell={(item, key) => {
-            if (key === 'value' || key === "goal") {
-              return `R$ ${item.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            if (key === "goal") {
+              return `R$ ${item.goal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            } else if (key === "accumulated") {
+              return `R$ ${item.accumulated.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             }
             return item[key];
           }}
@@ -130,9 +161,9 @@ const Savings: React.FC = () => {
         <Typography fontWeight={700}>{page}</Typography>
         <ActionButton
           variant="outlined"
-          color={page < 1000 ? "success" : "inherit"}
+          color={page < totalPages ? "success" : "inherit"}
           onClick={() => setPage(p => Math.min(1000, p + 1))}
-          disabled={page === 1000}
+          disabled={page === totalPages}
         >
           Próxima
         </ActionButton>

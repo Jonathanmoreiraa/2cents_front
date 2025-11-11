@@ -37,6 +37,7 @@ interface ExpenseEditModalProps {
     due_date: string;
     paid: number;
     category_id: number;
+    category?: string;
   };
 }
 
@@ -46,14 +47,15 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({ open, onClose, onSu
     const [dueDate, setDueDate] = useState<Date | null>(new Date(initialValues.due_date));
     const [paid, setPaid] = useState(initialValues.paid === 1);
     const [categoryId, setCategoryId] = useState(initialValues.category_id);
+    const [categoryName, setCategoryName] = useState(initialValues.category || '');
     const [categories, setCategories] = useState<{ name: string, id: number }[]>([]);
   
     const getCategories = async () => {
         try {
             const res = await api.get('/api/categories');
             setCategories(res.data.map((cat: { name: string, id: number }) => ({ name: cat.name, id: cat.id })));
-        } catch (err) {
-            onError(err);
+        } catch {
+            //onError(err);
         }
     };
 
@@ -108,6 +110,7 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({ open, onClose, onSu
         setDueDate(initialValues?.due_date ? new Date(initialValues.due_date) : null);
         setPaid(initialValues?.paid === 1 ? true : false);
         setCategoryId(initialValues?.category_id || 0);
+        setCategoryName(initialValues?.category || '');
     }, [initialValues]);
 
     useEffect(() => {
@@ -160,9 +163,18 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({ open, onClose, onSu
                         disablePortal
                         options={categories}
                         fullWidth
+                        disabled={categoryName === "Caixinha"}
                         autoHighlight
                         getOptionLabel={(option) => option.name}
-                        value={categories.find(cat => cat.id === categoryId) || null}
+                        value={
+                            categories.find(cat => cat.id === categoryId) ? 
+                            categories.find(cat => cat.id === categoryId) : 
+                            categoryName === "Caixinha" ? { name: categoryName, id: 0 } : 
+                            null
+                        }
+                        getOptionDisabled={(option) =>
+                            option.name === "Caixinha"
+                        }
                         slotProps={{
                             listbox: {
                                 sx: {

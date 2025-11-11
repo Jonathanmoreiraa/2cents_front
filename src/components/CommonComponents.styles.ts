@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
-import { Button, TextField, Box, Typography } from '@mui/material';
+import { Button, TextField, Box, Typography, DialogContent } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import InfoIcon from '@mui/icons-material/InfoOutlined';
 import theme from '../theme';
 
 export const StyledActionButton = styled(Button)(() => ({
@@ -33,6 +34,35 @@ export const StyledActionButton = styled(Button)(() => ({
 }));
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 8,
+    '& fieldset': {
+      borderColor: theme.palette.grey[300],
+    },
+    '&:hover fieldset': {
+      borderColor: theme.palette.grey[400],
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  '& .MuiInputLabel-root': {
+    color: theme.palette.grey[600],
+    '&.Mui-focused': {
+      color: theme.palette.primary.main,
+    },
+    '&.MuiInputLabel-shrink': {
+      transform: 'translate(14px, -9px) scale(0.75)',
+      backgroundColor: theme.palette.background.paper,
+    },
+  },
+  
+  '& .MuiInputLabel-outlined': {
+    transform: 'translate(14px, 16px) scale(1)',
+  },
+}));
+
+export const StyledTextLine = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 8,
     '& fieldset': {
@@ -122,6 +152,11 @@ export const EmptyStateContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
 })); 
 
+export const ModalContainerContent = styled(DialogContent)(({ theme }) => ({
+  scrollbarWidth: 'thin',
+  scrollbarColor: `${theme.palette.primary.main} #e6f2ec`,
+})); 
+
 export const DateFieldWrapper = styled(DatePicker)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     padding: "15px 0",
@@ -156,3 +191,12 @@ export const DateFieldWrapper = styled(DatePicker)(({ theme }) => ({
     borderColor: "#2e6846 !important",
   }
 })); 
+
+export const IconInfoOutlined = styled(InfoIcon)(() => ({
+  marginLeft: 4,
+  cursor: "pointer",
+  '&:hover': {
+    transform: 'scale(1.1)',
+    transition: 'transform 0.3s'
+  }
+}))

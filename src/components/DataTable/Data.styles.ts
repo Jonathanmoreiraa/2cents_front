@@ -30,6 +30,11 @@ export const StyledTableRow = styled(TableRow)({
     padding: '18px 0',
     paddingLeft: 8,
     textAlign: "center",
+    maxWidth: "150px",
+    lineBreak: "break-word",
+    hyphens: "auto",
+    wordBreak: "break-word",
+    overflowWrap: "break-word",
   },
   '&:last-child td': {
     borderBottom: 'none',

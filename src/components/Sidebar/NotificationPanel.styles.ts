@@ -91,10 +91,12 @@ export const ClearAll = styled.span`
   }
 `;
 
-export const Title = styled.div`
+export const Title = styled.p`
   font-weight: bold;
   text-align: center;
-  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: ${theme.palette.primary.main};
 `;
 

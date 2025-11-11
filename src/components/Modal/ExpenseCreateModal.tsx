@@ -52,8 +52,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
     try {
       const res = await api.get('/api/categories');
       setCategories(res.data.map((cat: { name: string, id: number }) => ({ name: cat.name, id: cat.id })));
-    } catch (err) {
-      onError(err);
+    } catch {
+      //onError(err);
     }
   };
 
@@ -166,6 +166,9 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
               fullWidth
               autoHighlight
               getOptionLabel={(option) => option.name}
+              getOptionDisabled={(option) =>
+                option.name === "Caixinha"
+              }
               slotProps={{
                   listbox: {
                     sx: {

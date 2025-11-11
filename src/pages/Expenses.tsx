@@ -49,8 +49,6 @@ const Expenses = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalAddOpen, setModalAddOpen] = useState(false);  
   const [modalEditOpen, setModalEditOpen] = useState(false);
-  const [modalEditValues, setModalEditValues] = useState<Expense>({} as Expense);
-  const totalPages = Math.max(1, Math.ceil(expenses.length / ITEMS_PER_PAGE));
   const paginated = expenses.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const { firstDay, lastDay } = getFirstAndLastDayOfMonth();
   const [filterValues, setFilterValues] = useState<FilterValues>({
@@ -67,11 +65,14 @@ const Expenses = () => {
       due_soon: false,
     }
   });
+  const [modalEditValues, setModalEditValues] = useState<Expense>({} as Expense);
+  const totalPages = Math.max(1, Math.ceil(expenses.length / ITEMS_PER_PAGE));
 
   const handleGetExpenses = async () => {
     try {
       const res = await api.post('/api/expense/filter', { ...filterValues })
       setExpenses(formatExpenses(res.data));
+      console.log(expenses)
     } catch (err) {
       handleError(err);
     }
@@ -169,12 +170,6 @@ const Expenses = () => {
   useEffect(() => {
     setLoading(true);
     handleGetExpenses();
-
-    if (expenses.length < 10) {
-      filterValues.date_start = null;
-      filterValues.date_end = null;
-      handleFilter(filterValues);
-    }
   }, []);
 
   return (
@@ -211,6 +206,7 @@ const Expenses = () => {
           due_date: modalEditValues.due_date,
           paid: modalEditValues.paid,
           category_id: modalEditValues.category_id,
+          category: modalEditValues.category,
         }}
       />
       {isMobile ? (

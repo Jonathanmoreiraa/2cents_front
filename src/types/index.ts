@@ -70,6 +70,6 @@ export interface Saving {
   id: number,
   priority: number;
   description: string;
-  value: number;
+  accumulated: number;
   goal: number;
 }
