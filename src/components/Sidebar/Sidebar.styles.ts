@@ -57,6 +57,7 @@ export const Menu = styled.ul`
   padding: 0;
   margin: 0;
   flex: 1;
+  z-index: 2;
 `;
 
 export const MenuItem = styled.li<{ selected?: boolean }>`

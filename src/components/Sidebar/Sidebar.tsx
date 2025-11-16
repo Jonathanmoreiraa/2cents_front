@@ -140,7 +140,7 @@ const Sidebar: React.FC = () => {
             marginTop: "-16px"
           }}
         >
-          <img src={logo} alt="Logo Planejja" style={{ maxWidth: '80%', height: 96 }} />
+          <img src={logo} alt="Logo Planejja" style={{ maxWidth: '80%', height: 96, zIndex: 1 }} />
         </Box>
       </TopSection>
       <Menu>

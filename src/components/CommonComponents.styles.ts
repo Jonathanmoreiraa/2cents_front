@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Button, TextField, Box, Typography, DialogContent } from '@mui/material';
+import { Button, TextField, Box, Typography, DialogContent, Grid } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import InfoIcon from '@mui/icons-material/InfoOutlined';
 import theme from '../theme';
@@ -198,5 +198,11 @@ export const IconInfoOutlined = styled(InfoIcon)(() => ({
   '&:hover': {
     transform: 'scale(1.1)',
     transition: 'transform 0.3s'
+  }
+}))
+
+export const StyledGrid = styled(Grid)(() => ({
+  '& .MuiPaper-root': {
+    borderRadius: 10,
   }
 }))
