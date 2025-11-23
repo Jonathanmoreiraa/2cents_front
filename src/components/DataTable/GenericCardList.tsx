@@ -37,7 +37,7 @@ function GenericCardList<T extends { id?: number | string }>({
             {headers.map((header) => (
               <CardRow key={String(header.key)}>
                 <Box component="span" fontWeight={600}>{header.label}:</Box>
-                <Box component="span">
+                <Box component="span" paddingLeft={1} textAlign={'right'}>
                   {renderItem ? renderItem(item, header.key) : (item[header.key] as React.ReactNode)}
                 </Box>
               </CardRow>

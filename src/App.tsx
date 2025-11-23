@@ -12,6 +12,7 @@ import authService from './services/authService';
 import Revenues from './pages/Revenues';
 import Expenses from './pages/Expenses';
 import Savings from './pages/Savings';
+import Settings from './pages/Settings';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +57,7 @@ function App() {
           <Routes>
             {/* TODO: Adicionar a rota de recuperar senha */}
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/registro" element={<Register />} />
             
             <Route
               path="/"
@@ -70,6 +71,7 @@ function App() {
               <Route path='/receitas' element={<Revenues />} />
               <Route path='/despesas' element={<Expenses />} />
               <Route path='/caixinhas' element={<Savings />} />
+              <Route path='/configuracoes' element={<Settings />} />
             </Route>
           </Routes>
         </Router>

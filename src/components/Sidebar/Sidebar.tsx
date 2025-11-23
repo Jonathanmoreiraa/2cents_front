@@ -51,20 +51,21 @@ const Sidebar: React.FC = () => {
   // const [notifications, setNotifications] = useState(mockNotifications);
   const panelRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLDivElement>(null);
+  const pathname = window.location.pathname;
   const dispatch = useDispatch();
   const navigate = useNavigate();
- /*  const isMobile = useMediaQuery('(max-width:900px)');
-
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  const handleBellClick = () => {
-    setShowNotifications((prev) => !prev);
-  };
-
-  const putNotification = async (data: object) => {
-    await fetch('/api/notification', { method: 'PUT', body: JSON.stringify(data) });
-    return new Promise(resolve => setTimeout(resolve, 300));
-  }; */
+  /*  const isMobile = useMediaQuery('(max-width:900px)');
+ 
+   const unreadCount = notifications.filter(n => !n.read).length;
+ 
+   const handleBellClick = () => {
+     setShowNotifications((prev) => !prev);
+   };
+ 
+   const putNotification = async (data: object) => {
+     await fetch('/api/notification', { method: 'PUT', body: JSON.stringify(data) });
+     return new Promise(resolve => setTimeout(resolve, 300));
+   }; */
 
   /* const handleCloseNotification = async (id: number) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
@@ -107,6 +108,14 @@ const Sidebar: React.FC = () => {
     };
   }, [showNotifications]);
 
+  useEffect(() => {
+    setSelected(pathname);
+
+    if (pathname === "/receitas" || pathname === "/despesas") {
+      setFinancasOpen(true);
+    }
+  }, [pathname])
+
   return (
     <SidebarContainer>
       <TopSection>
@@ -144,26 +153,26 @@ const Sidebar: React.FC = () => {
         </Box>
       </TopSection>
       <Menu>
-        <MenuItem style={{marginTop: "-16px"}} selected={selected === 'Dashboard'} onClick={() => {setSelected('Dashboard'); setFinancasOpen(false); navigate('/')}}>
+        <MenuItem style={{ marginTop: "-16px" }} selected={selected === '/'} onClick={() => { setFinancasOpen(false); navigate('/') }}>
           <FaChartBar style={{ marginRight: 16 }} /> Dashboard
         </MenuItem>
-        <MenuItem selected={selected === 'Receitas' || selected === 'Despesas'} onClick={() => {setFinancasOpen(!financasOpen); setSelected("Finanças")}}>
-          <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças <FaChevronDown style={{ marginLeft: 'auto', transition: 'transform 0.2s', transform: financasOpen ? 'rotate(180deg)' : 'rotate(0deg)'}} />
+        <MenuItem selected={selected === '/receitas' || selected === '/despesas'} onClick={() => setFinancasOpen(!financasOpen)}>
+          <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças <FaChevronDown style={{ marginLeft: 'auto', transition: 'transform 0.2s', transform: financasOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </MenuItem>
         {financasOpen && (
           <SubMenu>
-            <SubMenuItem selected={selected === 'Receitas'} onClick={() => { setSelected('Receitas'); navigate('/receitas'); }}>
+            <SubMenuItem selected={selected === '/receitas'} onClick={() => navigate('/receitas')}>
               Receitas
             </SubMenuItem>
-            <SubMenuItem selected={selected === 'Despesas'} onClick={() => { setSelected('Despesas'); navigate('/despesas'); }}>
+            <SubMenuItem selected={selected === '/despesas'} onClick={() => navigate('/despesas')}>
               Despesas
             </SubMenuItem>
           </SubMenu>
         )}
-        <MenuItem selected={selected === 'Caixinhas'} onClick={() => {setSelected('Caixinhas'); navigate('/caixinhas'); setFinancasOpen(false)}}>
+        <MenuItem selected={selected === '/caixinhas'} onClick={() => { navigate('/caixinhas'); setFinancasOpen(false) }}>
           <FaWallet style={{ marginRight: 16 }} /> Caixinhas
         </MenuItem>
-        <MenuItem selected={selected === 'Configurações'} onClick={() => {setSelected('Configurações'); setFinancasOpen(false)}}>
+        <MenuItem selected={selected === '/configuracoes'} onClick={() => { setFinancasOpen(false); navigate('/configuracoes') }}>
           <FaCog style={{ marginRight: 16 }} /> Configurações
         </MenuItem>
       </Menu>

@@ -8,6 +8,12 @@ export interface User {
   updated_at: string;
 }
 
+export interface UserSettings {
+  name: string;
+  email: string;
+  birth_date: string;
+}
+
 export interface LoginCredentials {
   email: string;
   password: string;

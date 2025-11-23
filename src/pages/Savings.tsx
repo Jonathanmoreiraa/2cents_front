@@ -11,24 +11,25 @@ import theme from '../theme';
 import api from '../services/api';
 import SavingCreateModal from '../components/Modal/SavingCreateModal';
 import SimulationModal from '../components/Modal/SimulationModal';
+import GenericCardList, { GenericCardListHeader } from '../components/DataTable/GenericCardList';
 
 const headers: DataTableHeader<Saving>[] = [
   { label: 'Prioridade', key: 'priority' },
   { label: 'Descrição', key: 'description' },
   { label: 'Valor Acumulado', key: 'accumulated' },
-  { label: 'Meta', key: 'goal', align: 'inherit'},
+  { label: 'Meta', key: 'goal', align: 'inherit' },
 ];
 
-// const cardHeaders: GenericCardListHeader<Saving>[] = [
-//   { label: 'Prioridade', key: 'priority' },
-//   { label: 'Descrição', key: 'description' },
-//   { label: 'Valor acumulado', key: 'value' },
-//   { label: 'Meta', key: 'goal' },
-// ];
+const cardHeaders: GenericCardListHeader<Saving>[] = [
+  { label: 'Prioridade', key: 'priority' },
+  { label: 'Descrição', key: 'description' },
+  { label: 'Valor Acumulado', key: 'accumulated' },
+  { label: 'Meta', key: 'goal' },
+];
 
 const Savings: React.FC = () => {
   const ITEMS_PER_PAGE = 10;
-  const [page, setPage] = useState(1);  
+  const [page, setPage] = useState(1);
   const [savings, setSavings] = useState<Saving[]>([]);
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalSimulationOpen, setModalSimulationOpen] = useState(false);
@@ -69,7 +70,7 @@ const Savings: React.FC = () => {
     } catch (err) {
       handleError(err);
     }
-    
+
     setLoading(false);
   }
 
@@ -79,7 +80,7 @@ const Savings: React.FC = () => {
     setOpenError(true);
   }
 
-   const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number) => {
     try {
       if (!window.confirm('Tem certeza que deseja deletar esta caixinha?')) return;
       await api.delete(`/api/saving/${id}`);
@@ -95,10 +96,10 @@ const Savings: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ 
-      p: 3, 
-      width: '100%', 
-      minHeight: '100%', 
+    <Box sx={{
+      p: 3,
+      width: '100%',
+      minHeight: '100%',
       background: '#fff',
       overflow: 'auto',
       scrollbarWidth: 'thin',
@@ -121,12 +122,44 @@ const Savings: React.FC = () => {
         onClose={handleCloseAddModal}
         onSubmit={handleCreateSaving}
       />
-      <SimulationModal 
+      <SimulationModal
         open={modalSimulationOpen}
         onClose={handleCloseSimulationModal}
       />
       {isMobile ? (
-        <div></div>
+        <GenericCardList
+          items={paginated}
+          headers={cardHeaders}
+          renderItem={(item, key) => {
+            if (key === 'status') {
+              return (
+                <StatusTypography status={item.status}>
+                  {item.status === 'Received' && 'Recebida'}
+                  {item.status === 'Pending' && 'Pendente'}
+                  {item.status === 'Overdue' && 'Em atraso'}
+                </StatusTypography>
+              );
+            }
+            if (key === 'value') {
+              return `R$ ${item.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            }
+            if (key === 'dueDate') {
+              return new Date(item.dueDate).toLocaleDateString('pt-BR');
+            }
+            return item[key];
+          }}
+          actions={(item) => (
+            <Stack direction="row" spacing={1} justifyContent="flex-end">
+              <IconButton size="small" color="primary" onClick={() => handleOpenEditModal(item)}>
+                <EditIcon fontSize="small" />
+              </IconButton>
+              <IconButton size="small" color="error" onClick={() => handleDelete(item.id)}>
+                <DeleteIcon fontSize="small" sx={{ color: theme.palette.error.main }} />
+              </IconButton>
+            </Stack>
+          )}
+          emptyMessage="Nenhum resultado encontrado."
+        />
       ) : (
         <DataTable
           items={paginated}
@@ -169,11 +202,11 @@ const Savings: React.FC = () => {
         </ActionButton>
       </Stack>
       {/* TODO: adicionar snackbars de sucesso e erro */}
-       <Snackbar open={openError} autoHideDuration={4000} onClose={handleCloseError} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-          <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-            {error}
-          </Alert>
-        </Snackbar>
+      <Snackbar open={openError} autoHideDuration={4000} onClose={handleCloseError} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
