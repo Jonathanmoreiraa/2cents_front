@@ -12,6 +12,7 @@ import api from '../services/api';
 import SavingCreateModal from '../components/Modal/SavingCreateModal';
 import SimulationModal from '../components/Modal/SimulationModal';
 import GenericCardList, { GenericCardListHeader } from '../components/DataTable/GenericCardList';
+import SavingEditModal from '../components/Modal/SavingEditModal';
 
 const headers: DataTableHeader<Saving>[] = [
   { label: 'Prioridade', key: 'priority' },
@@ -32,14 +33,17 @@ const Savings: React.FC = () => {
   const [page, setPage] = useState(1);
   const [savings, setSavings] = useState<Saving[]>([]);
   const [modalAddOpen, setModalAddOpen] = useState(false);
+  const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalSimulationOpen, setModalSimulationOpen] = useState(false);
-  const [, setSavingData] = useState<Saving | null>(null);
-  const [, setEditModalOpen] = useState(false);
+  const [savingData, setSavingData] = useState<Saving | null>(null);
   const [loading, setLoading] = useState(false);
   const isMobile = useMediaQuery('(max-width:900px)');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [openError, setOpenError] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const handleCloseError = () => setOpenError(false);
+  const handleCloseSuccess = () => setOpenSuccess(false);
   const totalPages = Math.max(1, Math.ceil(savings.length / ITEMS_PER_PAGE));
   const paginated = savings.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
@@ -47,10 +51,11 @@ const Savings: React.FC = () => {
   const handleOpenSimulationModal = () => setModalSimulationOpen(true);
   const handleCloseAddModal = () => setModalAddOpen(false);
   const handleCloseSimulationModal = () => setModalSimulationOpen(false);
+  const handleCloseEditModal = () => setModalEditOpen(false);
 
   const handleOpenEditModal = (data: Saving) => {
     setSavingData(data);
-    setEditModalOpen(true);
+    setModalEditOpen(true);
   };
 
   const handleCreateSaving = async (data: object) => {
@@ -74,10 +79,31 @@ const Savings: React.FC = () => {
     setLoading(false);
   }
 
+  const handleEditSaving = async (data: Saving) => {
+    try {
+      const res = await api.put(`/api/saving/${data.id}`, data)
+      if (res.data) {
+        setModalEditOpen(false);
+        handleSucess(res.data.message);
+      }
+    } catch (err) {
+      handleError(err);
+    }
+
+    setLoading(false);
+  };
+
   const handleError = (error: unknown) => {
     const errorMessage = error && typeof error === 'object' ? (error as { response: { data: { message: string } } }).response.data.message : 'Erro ao efetuar a ação, tente novamente.';
     setError(errorMessage);
     setOpenError(true);
+  }
+
+  const handleSucess = (success: unknown) => {
+    const successMessage = success && typeof success === 'object' ? (success as { response: { data: { message: string } } }).response.data.message : 'Ação realizada com sucesso!';
+    setSuccess(successMessage);
+    setOpenSuccess(true);
+    handleGetSavings();
   }
 
   const handleDelete = async (id: number) => {
@@ -122,6 +148,12 @@ const Savings: React.FC = () => {
         onClose={handleCloseAddModal}
         onSubmit={handleCreateSaving}
       />
+      <SavingEditModal
+        open={modalEditOpen}
+        onClose={handleCloseEditModal}
+        onSubmit={handleEditSaving}
+        initialValues={savingData}
+      />
       <SimulationModal
         open={modalSimulationOpen}
         onClose={handleCloseSimulationModal}
@@ -131,20 +163,10 @@ const Savings: React.FC = () => {
           items={paginated}
           headers={cardHeaders}
           renderItem={(item, key) => {
-            if (key === 'status') {
-              return (
-                <StatusTypography status={item.status}>
-                  {item.status === 'Received' && 'Recebida'}
-                  {item.status === 'Pending' && 'Pendente'}
-                  {item.status === 'Overdue' && 'Em atraso'}
-                </StatusTypography>
-              );
-            }
-            if (key === 'value') {
-              return `R$ ${item.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-            }
-            if (key === 'dueDate') {
-              return new Date(item.dueDate).toLocaleDateString('pt-BR');
+            if (key === 'goal') {
+              return `R$ ${item.goal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            } else if (key === 'accumulated') {
+              return `R$ ${item.accumulated.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             }
             return item[key];
           }}
@@ -201,7 +223,11 @@ const Savings: React.FC = () => {
           Próxima
         </ActionButton>
       </Stack>
-      {/* TODO: adicionar snackbars de sucesso e erro */}
+      <Snackbar open={openSuccess} autoHideDuration={4000} onClose={handleCloseSuccess} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {success}
+        </Alert>
+      </Snackbar>
       <Snackbar open={openError} autoHideDuration={4000} onClose={handleCloseError} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
           {error}

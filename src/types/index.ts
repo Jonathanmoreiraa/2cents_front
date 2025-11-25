@@ -78,4 +78,7 @@ export interface Saving {
   description: string;
   accumulated: number;
   goal: number;
+  months_to_goal?: number;
+  should_be_expense?: number;
+  is_emergency_fund?: number;
 }

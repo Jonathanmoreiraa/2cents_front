@@ -131,7 +131,7 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
                   </Title>
                 </Typography>
                 <Typography mt={1} mb={1} fontSize={14} color="text.secondary">
-                  Investindo <b>{formatToMoney(Number(goal) / monthsToGoal)}</b> por <b>{monthsToGoal}</b> {months}, seu dinheiro renderá aproximadamente as seguintes quantias no final do período:
+                  Investindo <b>{formatToMoney(Number(goal))}</b> por <b>{monthsToGoal}</b> {months}, seu dinheiro renderá aproximadamente as seguintes quantias no final do período:
                 </Typography>
                 <Typography mt={1} mb={1} fontSize={14} color="text.secondary">
                   <ul>

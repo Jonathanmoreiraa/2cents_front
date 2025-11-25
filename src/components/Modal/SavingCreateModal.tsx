@@ -51,18 +51,18 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ 
-      is_emergency_fund: isEmergencyFund ? 1 : 0, 
-      accumulated, 
-      description: isEmergencyFund ? "Reserva de emergência" : description, 
-      goal: Number(goal), 
-      months_to_goal: monthsToGoal, 
-      should_be_expense: shouldBeExpense ? 1 : 0 
+    onSubmit({
+      is_emergency_fund: isEmergencyFund ? 1 : 0,
+      accumulated,
+      description: isEmergencyFund ? "Reserva de emergência" : description,
+      goal: Number(goal),
+      months_to_goal: monthsToGoal,
+      should_be_expense: shouldBeExpense ? 1 : 0
     });
   };
 
   const formatToMoney = (value: number) => {
-    const moneyFormat = new Intl.NumberFormat("pt-BR", {style: 'currency', currency: 'BRL'})
+    const moneyFormat = new Intl.NumberFormat("pt-BR", { style: 'currency', currency: 'BRL' })
     return moneyFormat.format(value);
   }
 
@@ -74,7 +74,7 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
     setIsLoadingSimulation(true);
     if (goal && monthsToGoal) {
       const res = await api.post('/api/month/rendiment', {
-        initial_value: Number(goal), 
+        initial_value: Number(goal),
         months: monthsToGoal,
         accumulated: Number(accumulated)
       });
@@ -115,20 +115,26 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
               É uma reserva de emergência?
             </Typography>
             <Switch color="success" checked={isEmergencyFund} onChange={e => setIsEmergencyFund(e.target.checked)} />
-            <IconInfoOutlined style={{color: theme.palette.info.main}} onClick={handleClickSimulation}/>
-            <Popover
-              id={idPopEmergency}
-              open={openPopEmergencyFund}
-              anchorEl={anchorEl}
-              onClose={handleCloseSimulation}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              style={{width: "80%"}}
-            >
-              <Typography sx={{ p: 1, fontSize: 12 }}>Recomenda-se reservar pelo menos 10% das receitas recebidas</Typography>
-            </Popover>
+            {
+              isEmergencyFund && (
+                <>
+                  <IconInfoOutlined style={{ color: theme.palette.info.main }} onClick={handleClickSimulation} />
+                  <Popover
+                    id={idPopEmergency}
+                    open={openPopEmergencyFund}
+                    anchorEl={anchorEl}
+                    onClose={handleCloseSimulation}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    style={{ width: "80%" }}
+                  >
+                    <Typography sx={{ p: 1, fontSize: 12 }}>Recomenda-se reservar pelo menos 10% das receitas recebidas</Typography>
+                  </Popover>
+                </>
+              )
+            }
           </Box>
           <StyledTextField
             label="Meta (R$)"
@@ -147,7 +153,7 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
             required
             margin="normal"
             type="number"
-            inputProps={{  min: 0  }}
+            inputProps={{ min: 0 }}
           />
           {
             !isEmergencyFund && (
@@ -169,13 +175,13 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
             required
             margin="normal"
             type="number"
-            inputProps={{  min: 1  }}
+            inputProps={{ min: 1 }}
           />
           <Box display="flex" alignItems="center" >
             <Switch color="success" checked={shouldBeExpense} onChange={e => setShouldBeExpense(e.target.checked)} />
             <Typography mr={2}>Adicionar as despesas mensais?</Typography>
           </Box>
-          <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 0 , mt: 2}}>
+          <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 0, mt: 2 }}>
             <ActionButton type="submit" variant="contained" color="success" sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 15 }}>
               Cadastrar
             </ActionButton>
@@ -190,8 +196,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
               <>
                 <Typography mr={2}>
                   <Title>
-                    Projeção de rendimento 
-                    <IconInfoOutlined style={{color: theme.palette.info.main}} onClick={handleClickSimulation}/>
+                    Projeção de rendimento
+                    <IconInfoOutlined style={{ color: theme.palette.info.main }} onClick={handleClickSimulation} />
                     <Popover
                       id={idPopSimulation}
                       open={openPopSimulation}
@@ -201,7 +207,7 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
                         vertical: 'bottom',
                         horizontal: 'left',
                       }}
-                      style={{width: "80%"}}
+                      style={{ width: "80%" }}
                     >
                       <Typography sx={{ p: 1, fontSize: 12 }}>Os valores apresentados consideram a média de rendimento com base em 100% do CDI (para o CDB) e as taxas atuais do Banco Central. Para obter uma estimativa mais precisa, recomendamos que você consulte sua instituição financeira.</Typography>
                     </Popover>
@@ -230,5 +236,5 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({ open, onClose, on
     </Dialog>
   );
 };
-          
+
 export default SavingCreateModal; 

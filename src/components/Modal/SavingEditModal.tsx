@@ -2,105 +2,153 @@ import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
-  DialogContent,
   DialogActions,
   IconButton,
   Box,
   Typography,
   Switch,
-  Divider
+  Divider,
+  Popover,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import StyledTextField from '../StyledTextField';
-import DateFieldInput from '../DateFieldInput';
 import ActionButton from '../ActionButton';
-import { EditRevenue, Revenue } from '../../types';
+import { IconInfoOutlined, ModalContainerContent } from '../CommonComponents.styles';
+import theme from '../../theme';
+import { Saving } from '../../types';
 
-interface RevenueEditModalProps {
+interface SavingEditModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: EditRevenue) => void;
-  initialValues: Revenue | null;
+  onSubmit: (data: Saving) => void;
+  initialValues: Saving | null;
 }
 
-const RevenueEditModal: React.FC<RevenueEditModalProps> = ({ open, onClose, onSubmit, initialValues }) => {
-  const [value, setValue] = useState("");
-  const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [received, setReceived] = useState(initialValues?.status === 'Received' ? true : false);
+const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubmit, initialValues }) => {
+  const [description, setDescription] = useState('');
+  const [accumulated, setAccumulated] = useState(0);
+  const [goal, setGoal] = useState('');
+  const [priority, setPriority] = useState(0);
+  const [shouldBeExpense, setShouldBeExpense] = useState(false);
+  const [isEmergencyFund, setIsEmergencyFund] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<SVGSVGElement | null>(null);
+  const openPopEmergencyFund = Boolean(anchorEl);
+  const idPopEmergency = openPopEmergencyFund ? 'simple-popover' : undefined;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const dueDateString = dueDate?.toISOString() || null;
-    onSubmit({ 
-      value: Number(value), 
-      description: description, 
-      due_date: dueDateString, 
-      received: received ? 1 : 0 
+    onSubmit({
+      id: initialValues!.id,
+      is_emergency_fund: isEmergencyFund ? 1 : 0,
+      accumulated,
+      description: isEmergencyFund ? "Reserva de emergência" : description,
+      goal: Number(goal),
+      should_be_expense: shouldBeExpense ? 1 : 0,
+      priority: priority,
     });
   };
 
+  const handleClickSimulation = (event: React.MouseEvent<SVGSVGElement>) => setAnchorEl(event.currentTarget);
+
+  const handleCloseSimulation = () => setAnchorEl(null);
+
   useEffect(() => {
-    setValue(initialValues?.value?.toString() || '');
-    setDescription(initialValues?.description || '');
-    setDueDate(initialValues?.dueDate ? new Date(initialValues.dueDate) : null);
-    setReceived(initialValues?.status === 'Received' ? true : false);
+    setDescription(initialValues?.description || "");
+    setAccumulated(initialValues?.accumulated || 0);
+    setGoal(String(initialValues?.goal));
+    setShouldBeExpense(initialValues?.should_be_expense === 0 ? false : true);
+    setIsEmergencyFund(initialValues?.is_emergency_fund === 0 ? false : true);
+    setPriority(initialValues?.priority || 0);
   }, [initialValues]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
       <DialogTitle sx={{ fontWeight: 600, fontSize: 28, pb: 0, pt: 3, px: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        Editar receita
+        Edição de caixinha
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <Divider sx={{ my: 1 }} />
-      <DialogContent sx={{ pt: 0, px: 4 }}>
+      <ModalContainerContent sx={{ pt: 0, px: 4 }}>
         <Box component="form" onSubmit={handleSubmit}>
-          <Box display="flex" alignItems={'center'} sx={{ flexDirection: { xs: 'column', md: 'row' },  gap: { sm: 0, md: 2 } }}>
-            <StyledTextField
-              label="Valor (R$)"
-              value={value}
-              type="number"
-              onChange={e => setValue(e.target.value)}
-              margin="normal"
-              sx={{ width: { xs: "100%", md: "75%" } }}
-              required
-            />
-            <DateFieldInput
-              label="Data"
-              value={dueDate || null}
-              onChange={setDueDate}
-              sx={{ mt: 2, mb: 1 }}
-              slotProps={{
-                textField: {
-                  required: true,
-                },
-              }}
-            />
+          <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+            <Typography mr={2}>
+              É uma reserva de emergência?
+            </Typography>
+            <Switch color="success" disabled checked={isEmergencyFund} onChange={e => setIsEmergencyFund(e.target.checked)} />
+            {
+              isEmergencyFund && (
+                <>
+                  <IconInfoOutlined style={{ color: theme.palette.info.main }} onClick={handleClickSimulation} />
+                  <Popover
+                    id={idPopEmergency}
+                    open={openPopEmergencyFund}
+                    anchorEl={anchorEl}
+                    onClose={handleCloseSimulation}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    style={{ width: "80%" }}
+                  >
+                    <Typography sx={{ p: 1, fontSize: 12 }}>Recomenda-se reservar pelo menos 10% das receitas recebidas</Typography>
+                  </Popover>
+                </>
+              )
+            }
           </Box>
           <StyledTextField
-            label="Descrição"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
+            label="Prioridade"
+            value={priority}
+            onChange={e => setPriority(Number(e.target.value))}
             fullWidth
-            margin="normal"
             required
+            margin="normal"
+            type="number"
+            inputProps={{ min: 1 }}
           />
-          <Box display="flex" alignItems="center" mt={2} mb={3}>
-            <Typography mr={2}>Receita já recebida?</Typography>
-            <Switch color="success" checked={received} onChange={e => setReceived(e.target.checked)} />
-          </Box>
-          <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 0 }}>
-            <ActionButton type="submit" variant="contained" color="success" sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}>
+          <StyledTextField
+            label="Meta (R$)"
+            value={goal}
+            onChange={e => setGoal(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+            type="number"
+          />
+          <StyledTextField
+            label="Valor acumulado (R$)"
+            value={accumulated}
+            onChange={e => setAccumulated(Number(e.target.value))}
+            fullWidth
+            required
+            margin="normal"
+            type="number"
+            inputProps={{ min: 0 }}
+          />
+          {
+            !isEmergencyFund && (
+              <StyledTextField
+                label="Descrição"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                fullWidth
+                required
+                margin="normal"
+              />
+            )
+          }
+          <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 0, mt: 2 }}>
+            <ActionButton type="submit" variant="contained" color="success" sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 15 }}>
               Salvar
             </ActionButton>
           </DialogActions>
         </Box>
-      </DialogContent>
+        <Divider sx={{ my: 1 }} />
+      </ModalContainerContent>
     </Dialog>
   );
 };
 
-export default RevenueEditModal; 
+export default SavingEditModal; 
