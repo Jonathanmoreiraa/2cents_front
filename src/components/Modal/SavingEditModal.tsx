@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,13 +9,16 @@ import {
   Switch,
   Divider,
   Popover,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import StyledTextField from '../StyledTextField';
-import ActionButton from '../ActionButton';
-import { IconInfoOutlined, ModalContainerContent } from '../CommonComponents.styles';
-import theme from '../../theme';
-import { Saving } from '../../types';
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import StyledTextField from "../StyledTextField";
+import ActionButton from "../ActionButton";
+import {
+  IconInfoOutlined,
+  ModalContainerContent,
+} from "../CommonComponents.styles";
+import theme from "../../theme";
+import { Saving } from "../../types";
 
 interface SavingEditModalProps {
   open: boolean;
@@ -24,16 +27,21 @@ interface SavingEditModalProps {
   initialValues: Saving | null;
 }
 
-const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubmit, initialValues }) => {
-  const [description, setDescription] = useState('');
+const SavingEditModal: React.FC<SavingEditModalProps> = ({
+  open,
+  onClose,
+  onSubmit,
+  initialValues,
+}) => {
+  const [description, setDescription] = useState("");
   const [accumulated, setAccumulated] = useState(0);
-  const [goal, setGoal] = useState('');
+  const [goal, setGoal] = useState("");
   const [priority, setPriority] = useState(0);
   const [shouldBeExpense, setShouldBeExpense] = useState(false);
   const [isEmergencyFund, setIsEmergencyFund] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<SVGSVGElement | null>(null);
   const openPopEmergencyFund = Boolean(anchorEl);
-  const idPopEmergency = openPopEmergencyFund ? 'simple-popover' : undefined;
+  const idPopEmergency = openPopEmergencyFund ? "simple-popover" : undefined;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +56,8 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubm
     });
   };
 
-  const handleClickSimulation = (event: React.MouseEvent<SVGSVGElement>) => setAnchorEl(event.currentTarget);
+  const handleClickSimulation = (event: React.MouseEvent<SVGSVGElement>) =>
+    setAnchorEl(event.currentTarget);
 
   const handleCloseSimulation = () => setAnchorEl(null);
 
@@ -62,8 +71,22 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubm
   }, [initialValues]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
-      <DialogTitle sx={{ fontWeight: 600, fontSize: 28, pb: 0, pt: 3, px: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
+      <DialogTitle
+        sx={{
+          fontWeight: 600,
+          fontSize: 28,
+          pb: 0,
+          pt: 3,
+          px: 4,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
         Edição de caixinha
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
@@ -72,36 +95,45 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubm
       <Divider sx={{ my: 1 }} />
       <ModalContainerContent sx={{ pt: 0, px: 4 }}>
         <Box component="form" onSubmit={handleSubmit}>
-          <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-            <Typography mr={2}>
-              É uma reserva de emergência?
-            </Typography>
-            <Switch color="success" disabled checked={isEmergencyFund} onChange={e => setIsEmergencyFund(e.target.checked)} />
-            {
-              isEmergencyFund && (
-                <>
-                  <IconInfoOutlined style={{ color: theme.palette.info.main }} onClick={handleClickSimulation} />
-                  <Popover
-                    id={idPopEmergency}
-                    open={openPopEmergencyFund}
-                    anchorEl={anchorEl}
-                    onClose={handleCloseSimulation}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    style={{ width: "80%" }}
-                  >
-                    <Typography sx={{ p: 1, fontSize: 12 }}>Recomenda-se reservar pelo menos 10% das receitas recebidas</Typography>
-                  </Popover>
-                </>
-              )
-            }
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mt={2}>
+            <Typography mr={2}>É uma reserva de emergência?</Typography>
+            <Switch
+              color="success"
+              disabled
+              checked={isEmergencyFund}
+              onChange={(e) => setIsEmergencyFund(e.target.checked)}
+            />
+            {isEmergencyFund && (
+              <>
+                <IconInfoOutlined
+                  style={{ color: theme.palette.info.main }}
+                  onClick={handleClickSimulation}
+                />
+                <Popover
+                  id={idPopEmergency}
+                  open={openPopEmergencyFund}
+                  anchorEl={anchorEl}
+                  onClose={handleCloseSimulation}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  style={{ width: "80%" }}>
+                  <Typography sx={{ p: 1, fontSize: 12 }}>
+                    Recomenda-se reservar pelo menos 10% das receitas recebidas
+                  </Typography>
+                </Popover>
+              </>
+            )}
           </Box>
           <StyledTextField
             label="Prioridade"
             value={priority}
-            onChange={e => setPriority(Number(e.target.value))}
+            onChange={(e) => setPriority(Number(e.target.value))}
             fullWidth
             required
             margin="normal"
@@ -111,7 +143,7 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubm
           <StyledTextField
             label="Meta (R$)"
             value={goal}
-            onChange={e => setGoal(e.target.value)}
+            onChange={(e) => setGoal(e.target.value)}
             fullWidth
             required
             margin="normal"
@@ -120,27 +152,29 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubm
           <StyledTextField
             label="Valor acumulado (R$)"
             value={accumulated}
-            onChange={e => setAccumulated(Number(e.target.value))}
+            onChange={(e) => setAccumulated(Number(e.target.value))}
             fullWidth
             required
             margin="normal"
             type="number"
             inputProps={{ min: 0 }}
           />
-          {
-            !isEmergencyFund && (
-              <StyledTextField
-                label="Descrição"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                fullWidth
-                required
-                margin="normal"
-              />
-            )
-          }
-          <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 0, mt: 2 }}>
-            <ActionButton type="submit" variant="contained" color="success" sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 15 }}>
+          {!isEmergencyFund && (
+            <StyledTextField
+              label="Descrição"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              fullWidth
+              required
+              margin="normal"
+            />
+          )}
+          <DialogActions sx={{ justifyContent: "center", pb: 2, px: 0, mt: 2 }}>
+            <ActionButton
+              type="submit"
+              variant="contained"
+              color="success"
+              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 15 }}>
               Salvar
             </ActionButton>
           </DialogActions>
@@ -151,4 +185,4 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({ open, onClose, onSubm
   );
 };
 
-export default SavingEditModal; 
+export default SavingEditModal;

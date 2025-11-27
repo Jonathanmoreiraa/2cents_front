@@ -1,5 +1,5 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import React from "react";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 
 const Navigation: React.FC = () => (
   <AppBar position="static">
@@ -11,4 +11,4 @@ const Navigation: React.FC = () => (
   </AppBar>
 );
 
-export default Navigation; 
+export default Navigation;

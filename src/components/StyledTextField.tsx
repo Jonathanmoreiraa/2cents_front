@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyledTextField as StyledTextFieldComponent } from './CommonComponents.styles';
-import { TextFieldProps } from '@mui/material';
+import React from "react";
+import { StyledTextField as StyledTextFieldComponent } from "./CommonComponents.styles";
+import { TextFieldProps } from "@mui/material";
 
 const StyledTextField: React.FC<TextFieldProps> = (props) => {
   return (
@@ -14,4 +14,4 @@ const StyledTextField: React.FC<TextFieldProps> = (props) => {
   );
 };
 
-export default StyledTextField; 
+export default StyledTextField;

@@ -1,11 +1,22 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableRow, CircularProgress, Box } from '@mui/material';
-import { StyledTableContainer, StyledTableHead, StyledTableRow } from './Data.styles';
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  CircularProgress,
+  Box,
+} from "@mui/material";
+import {
+  StyledTableContainer,
+  StyledTableHead,
+  StyledTableRow,
+} from "./Data.styles";
 
 export interface DataTableHeader<T> {
   label: string;
   key: keyof T;
-  align?: 'left' | 'center' | 'right' | 'inherit';
+  align?: "left" | "center" | "right" | "inherit";
 }
 
 interface DataTableProps<T> {
@@ -22,7 +33,7 @@ function DataTable<T>({
   headers,
   renderCell,
   actions,
-  emptyMessage = 'Nenhum resultado encontrado.',
+  emptyMessage = "Nenhum resultado encontrado.",
   loading = false,
 }: DataTableProps<T>) {
   const colSpan = headers.length + (actions ? 1 : 0);
@@ -32,7 +43,9 @@ function DataTable<T>({
         <StyledTableHead>
           <TableRow>
             {headers.map((header) => (
-              <TableCell key={String(header.key)} align={header.align || 'left'}>
+              <TableCell
+                key={String(header.key)}
+                align={header.align || "left"}>
                 {header.label}
               </TableCell>
             ))}
@@ -43,7 +56,11 @@ function DataTable<T>({
           {loading ? (
             <TableRow>
               <TableCell colSpan={colSpan} align="center">
-                <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  minHeight={200}>
                   <CircularProgress />
                 </Box>
               </TableCell>
@@ -58,11 +75,17 @@ function DataTable<T>({
             items.map((item, index) => (
               <StyledTableRow key={index}>
                 {headers.map((header) => (
-                  <TableCell key={String(header.key)} align={header.align || 'left'}>
-                    {renderCell ? renderCell(item, header.key) : (item[header.key] as React.ReactNode)}
+                  <TableCell
+                    key={String(header.key)}
+                    align={header.align || "left"}>
+                    {renderCell
+                      ? renderCell(item, header.key)
+                      : (item[header.key] as React.ReactNode)}
                   </TableCell>
                 ))}
-                {actions && <TableCell align="center">{actions(item)}</TableCell>}
+                {actions && (
+                  <TableCell align="center">{actions(item)}</TableCell>
+                )}
               </StyledTableRow>
             ))
           )}
@@ -72,4 +95,4 @@ function DataTable<T>({
   );
 }
 
-export default DataTable; 
+export default DataTable;

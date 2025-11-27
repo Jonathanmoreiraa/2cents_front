@@ -1,5 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FaChartBar, FaMoneyBillWave, FaWallet, FaCog, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  FaChartBar,
+  FaMoneyBillWave,
+  FaWallet,
+  FaCog,
+  FaSignOutAlt,
+  FaChevronDown,
+} from "react-icons/fa";
 // import NotificationPanel from './NotificationPanel';
 import {
   SidebarContainer,
@@ -12,13 +19,13 @@ import {
   SubMenu,
   SubMenuItem,
   BottomSection,
-  ExitItem
-} from './Sidebar.styles';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
-import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
-import logo from '../../assets/logo_2cents_white.svg';
+  ExitItem,
+} from "./Sidebar.styles";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import logo from "../../assets/logo_2cents_white.svg";
 // import { useMediaQuery } from '@mui/material';
 // import { OverlayNotification } from '../../layouts/MainLayout.styles';
 
@@ -46,7 +53,7 @@ import logo from '../../assets/logo_2cents_white.svg';
 
 const Sidebar: React.FC = () => {
   const [financasOpen, setFinancasOpen] = useState(false);
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   // const [notifications, setNotifications] = useState(mockNotifications);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -84,7 +91,7 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -102,9 +109,9 @@ const Sidebar: React.FC = () => {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showNotifications]);
 
@@ -114,7 +121,7 @@ const Sidebar: React.FC = () => {
     if (pathname === "/receitas" || pathname === "/despesas") {
       setFinancasOpen(true);
     }
-  }, [pathname])
+  }, [pathname]);
 
   return (
     <SidebarContainer>
@@ -140,39 +147,71 @@ const Sidebar: React.FC = () => {
         </>} */}
         <Box
           sx={{
-            width: '80%',
-            bgcolor: '#358156',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: "-16px"
-          }}
-        >
-          <img src={logo} alt="Logo Planejja" style={{ maxWidth: '80%', height: 96, zIndex: 1 }} />
+            width: "80%",
+            bgcolor: "#358156",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "-16px",
+          }}>
+          <img
+            src={logo}
+            alt="Logo Planejja"
+            style={{ maxWidth: "80%", height: 96, zIndex: 1 }}
+          />
         </Box>
       </TopSection>
       <Menu>
-        <MenuItem style={{ marginTop: "-16px" }} selected={selected === '/'} onClick={() => { setFinancasOpen(false); navigate('/') }}>
+        <MenuItem
+          style={{ marginTop: "-16px" }}
+          selected={selected === "/"}
+          onClick={() => {
+            setFinancasOpen(false);
+            navigate("/");
+          }}>
           <FaChartBar style={{ marginRight: 16 }} /> Dashboard
         </MenuItem>
-        <MenuItem selected={selected === '/receitas' || selected === '/despesas'} onClick={() => setFinancasOpen(!financasOpen)}>
-          <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças <FaChevronDown style={{ marginLeft: 'auto', transition: 'transform 0.2s', transform: financasOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        <MenuItem
+          selected={selected === "/receitas" || selected === "/despesas"}
+          onClick={() => setFinancasOpen(!financasOpen)}>
+          <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças{" "}
+          <FaChevronDown
+            style={{
+              marginLeft: "auto",
+              transition: "transform 0.2s",
+              transform: financasOpen ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
         </MenuItem>
         {financasOpen && (
           <SubMenu>
-            <SubMenuItem selected={selected === '/receitas'} onClick={() => navigate('/receitas')}>
+            <SubMenuItem
+              selected={selected === "/receitas"}
+              onClick={() => navigate("/receitas")}>
               Receitas
             </SubMenuItem>
-            <SubMenuItem selected={selected === '/despesas'} onClick={() => navigate('/despesas')}>
+            <SubMenuItem
+              selected={selected === "/despesas"}
+              onClick={() => navigate("/despesas")}>
               Despesas
             </SubMenuItem>
           </SubMenu>
         )}
-        <MenuItem selected={selected === '/caixinhas'} onClick={() => { navigate('/caixinhas'); setFinancasOpen(false) }}>
+        <MenuItem
+          selected={selected === "/caixinhas"}
+          onClick={() => {
+            navigate("/caixinhas");
+            setFinancasOpen(false);
+          }}>
           <FaWallet style={{ marginRight: 16 }} /> Caixinhas
         </MenuItem>
-        <MenuItem selected={selected === '/configuracoes'} onClick={() => { setFinancasOpen(false); navigate('/configuracoes') }}>
+        <MenuItem
+          selected={selected === "/configuracoes"}
+          onClick={() => {
+            setFinancasOpen(false);
+            navigate("/configuracoes");
+          }}>
           <FaCog style={{ marginRight: 16 }} /> Configurações
         </MenuItem>
       </Menu>
@@ -185,4 +224,4 @@ const Sidebar: React.FC = () => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

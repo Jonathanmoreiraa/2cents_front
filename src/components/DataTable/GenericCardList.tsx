@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box, Typography, Stack } from '@mui/material';
-import { CardRow, EmptyStateBox, CardGeneric } from './Data.styles';
+import React from "react";
+import { Box, Typography, Stack } from "@mui/material";
+import { CardRow, EmptyStateBox, CardGeneric } from "./Data.styles";
 
 export interface GenericCardListHeader<T> {
   label: string;
@@ -20,12 +20,14 @@ function GenericCardList<T extends { id?: number | string }>({
   headers,
   renderItem,
   actions,
-  emptyMessage = 'Nenhum resultado encontrado.',
+  emptyMessage = "Nenhum resultado encontrado.",
 }: GenericCardListProps<T>) {
   if (!items.length) {
     return (
       <EmptyStateBox>
-        <Typography variant="h6" color="text.secondary">{emptyMessage}</Typography>
+        <Typography variant="h6" color="text.secondary">
+          {emptyMessage}
+        </Typography>
       </EmptyStateBox>
     );
   }
@@ -36,9 +38,13 @@ function GenericCardList<T extends { id?: number | string }>({
           <Stack spacing={1}>
             {headers.map((header) => (
               <CardRow key={String(header.key)}>
-                <Box component="span" fontWeight={600}>{header.label}:</Box>
-                <Box component="span" paddingLeft={1} textAlign={'right'}>
-                  {renderItem ? renderItem(item, header.key) : (item[header.key] as React.ReactNode)}
+                <Box component="span" fontWeight={600}>
+                  {header.label}:
+                </Box>
+                <Box component="span" paddingLeft={1} textAlign={"right"}>
+                  {renderItem
+                    ? renderItem(item, header.key)
+                    : (item[header.key] as React.ReactNode)}
                 </Box>
               </CardRow>
             ))}
@@ -54,4 +60,4 @@ function GenericCardList<T extends { id?: number | string }>({
   );
 }
 
-export default GenericCardList; 
+export default GenericCardList;

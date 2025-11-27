@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Panel,
   NotificationsList,
@@ -9,8 +9,8 @@ import {
   Title,
   Close,
   Text,
-  More
-} from './NotificationPanel.styles';
+  More,
+} from "./NotificationPanel.styles";
 
 interface Notification {
   id: number;
@@ -26,12 +26,17 @@ interface NotificationPanelProps {
   onMarkRead: (id: number) => void;
 }
 
-const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications, onClose, onClearAll, onMarkRead }) => {
+const NotificationPanel: React.FC<NotificationPanelProps> = ({
+  notifications,
+  onClose,
+  onClearAll,
+  onMarkRead,
+}) => {
   const [expanded, setExpanded] = useState<number | null>(null);
 
   const handleMore = (id: number) => {
     setExpanded(expanded === id ? null : id);
-    if (notifications.find(n => n.id === id && !n.read)) {
+    if (notifications.find((n) => n.id === id && !n.read)) {
       onMarkRead(id);
     }
   };
@@ -43,7 +48,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications, on
         <div></div>
       </TitleRow>
       <NotificationsList>
-        {notifications.map(n => (
+        {notifications.map((n) => (
           <NotificationItem key={n.id} expanded={expanded === n.id}>
             <TitleRow>
               {!n.read && <UnreadDot />}
@@ -51,11 +56,13 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications, on
               <Close onClick={() => onClose(n.id)}>×</Close>
             </TitleRow>
             <Text>
-              {expanded === n.id ? n.text : n.text.slice(0, 120) + (n.text.length > 120 ? '...' : '')}
+              {expanded === n.id
+                ? n.text
+                : n.text.slice(0, 120) + (n.text.length > 120 ? "..." : "")}
             </Text>
             {n.text.length > 120 && (
               <More onClick={() => handleMore(n.id)}>
-                {expanded === n.id ? 'Ver menos' : 'Ver mais...'}
+                {expanded === n.id ? "Ver menos" : "Ver mais..."}
               </More>
             )}
           </NotificationItem>
@@ -65,4 +72,4 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications, on
   );
 };
 
-export default NotificationPanel; 
+export default NotificationPanel;

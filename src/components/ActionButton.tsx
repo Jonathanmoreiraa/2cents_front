@@ -1,29 +1,36 @@
-import React from 'react';
-import { SxProps } from '@mui/material';
-import { StyledActionButton } from './CommonComponents.styles';
+import React from "react";
+import { SxProps } from "@mui/material";
+import { StyledActionButton } from "./CommonComponents.styles";
 
 interface ActionButtonProps {
-  variant?: 'text' | 'outlined' | 'contained';
-  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
+  variant?: "text" | "outlined" | "contained";
+  color?:
+    | "inherit"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning";
   onClick?: () => void;
   disabled?: boolean;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   children: React.ReactNode;
   sx?: SxProps;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({
-  variant = 'contained',
-  color = 'success',
+  variant = "contained",
+  color = "success",
   onClick,
   disabled = false,
   startIcon,
   endIcon,
   children,
   sx,
-  type = 'button',
+  type = "button",
 }) => {
   return (
     <StyledActionButton
@@ -34,11 +41,10 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       startIcon={startIcon}
       endIcon={endIcon}
       sx={sx}
-      type={type}
-    >
+      type={type}>
       {children}
     </StyledActionButton>
   );
 };
 
-export default ActionButton; 
+export default ActionButton;

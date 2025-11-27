@@ -217,12 +217,20 @@ const Home: React.FC = () => {
         </StyledGrid>
 
         <StyledGrid>
-          <Paper elevation={3} sx={{ p: 2, height: "100%", textAlign: "center" }}>
+          <Paper
+            elevation={3}
+            sx={{ p: 2, height: "100%", textAlign: "center" }}>
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
               Situação mensal (NOV/25)
             </Typography>
 
-            <Box sx={{ position: "relative", width: 200, height: 200, mx: "auto" }}>
+            <Box
+              sx={{
+                position: "relative",
+                width: 200,
+                height: 200,
+                mx: "auto",
+              }}>
               <Doughnut data={doughnutData} options={doughnutOptions} />
 
               <Box
@@ -236,24 +244,44 @@ const Home: React.FC = () => {
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                }}
-              >
-                <Typography variant="h4" fontWeight="bold" color={theme.palette.warning.main}>
+                }}>
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  color={theme.palette.warning.main}>
                   {percentage}%
                 </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ mt: -1 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ mt: -1 }}>
                   Atente-se!
                 </Typography>
-                <Typography variant="caption" sx={{ fontSize: 10, width: "70%" }}>
-                  Você gastou acima do recomendado, mas tudo bem, fique atento(a)!
+                <Typography
+                  variant="caption"
+                  sx={{ fontSize: 10, width: "70%" }}>
+                  Você gastou acima do recomendado, mas tudo bem, fique
+                  atento(a)!
                 </Typography>
               </Box>
             </Box>
 
             <Box sx={{ mt: 4 }}>
-              <Box display="flex" justifyContent="space-between" width={200} mb={1}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                width={200}
+                mb={1}>
                 <Box display="flex" alignItems="center">
-                  <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: theme.palette.error.main, mr: 1 }} />
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      bgcolor: theme.palette.error.main,
+                      mr: 1,
+                    }}
+                  />
                   <Typography>Despesas</Typography>
                 </Box>
                 <Typography fontWeight="bold">R$ 1800</Typography>
@@ -261,7 +289,15 @@ const Home: React.FC = () => {
 
               <Box display="flex" justifyContent="space-between" width={200}>
                 <Box display="flex" alignItems="center">
-                  <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: theme.palette.primary.main, mr: 1 }} />
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      bgcolor: theme.palette.primary.main,
+                      mr: 1,
+                    }}
+                  />
                   <Typography>Receitas</Typography>
                 </Box>
                 <Typography fontWeight="bold">R$ 2500</Typography>
@@ -271,7 +307,12 @@ const Home: React.FC = () => {
         </StyledGrid>
       </Grid>
 
-      <Grid container spacing={3} display="flex" justifyContent="space-between" sx={{ mt: 4 }}>
+      <Grid
+        container
+        spacing={3}
+        display="flex"
+        justifyContent="space-between"
+        sx={{ mt: 4 }}>
         <StyledGrid>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
             <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
@@ -303,14 +344,31 @@ const Home: React.FC = () => {
               <Bar data={controlData} options={controlOptions} />
             </Box>
 
-            <Box sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 3 }}>
+            <Box
+              sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 3 }}>
               <Box display="flex" alignItems="center">
-                <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: theme.palette.primary.main, mr: 1 }} />
+                <Box
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    bgcolor: theme.palette.primary.main,
+                    mr: 1,
+                  }}
+                />
                 <Typography variant="body2">Orçamento</Typography>
               </Box>
 
               <Box display="flex" alignItems="center">
-                <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: theme.palette.error.main, mr: 1 }} />
+                <Box
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    bgcolor: theme.palette.error.main,
+                    mr: 1,
+                  }}
+                />
                 <Typography variant="body2">Gasto real</Typography>
               </Box>
             </Box>

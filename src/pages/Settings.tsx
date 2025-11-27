@@ -5,20 +5,20 @@ import {
   Stack,
   Snackbar,
   Alert,
-} from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import ActionButton from '../components/ActionButton';
-import DateFieldInput from '../components/DateFieldInput';
-import authService from '../services/authService';
-import api from '../services/api';
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import ActionButton from "../components/ActionButton";
+import DateFieldInput from "../components/DateFieldInput";
+import authService from "../services/authService";
+import api from "../services/api";
 
 const Settings: React.FC = () => {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [birthDate, setBirthDate] = useState<Date | null>(null)
-  const [userId, setUserId] = useState<number>(0)
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [userId, setUserId] = useState<number>(0);
   const [openError, setOpenError] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const handleCloseError = () => setOpenError(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const successMessage = "Usuário editado com sucesso!";
@@ -29,10 +29,10 @@ const Settings: React.FC = () => {
       const userUpdated = await api.put(`/api/user/${userId}`, {
         name,
         email,
-        birth_date: birthDate
+        birth_date: birthDate,
       });
       if (userUpdated) {
-        setOpenSuccess(true)
+        setOpenSuccess(true);
       }
     } catch (error) {
       handleError(error);
@@ -40,10 +40,14 @@ const Settings: React.FC = () => {
   };
 
   const handleError = (error: unknown) => {
-    const errorMessage = error && typeof error === 'object' ? (error as { response: { data: { message: string } } }).response.data.message : 'Erro ao efetuar a ação, tente novamente.';
+    const errorMessage =
+      error && typeof error === "object"
+        ? (error as { response: { data: { message: string } } }).response.data
+            .message
+        : "Erro ao efetuar a ação, tente novamente.";
     setError(errorMessage);
     setOpenError(true);
-  }
+  };
 
   const getUserData = async () => {
     try {
@@ -59,30 +63,33 @@ const Settings: React.FC = () => {
     } catch (error) {
       handleError(error);
     }
-  }
+  };
 
   useEffect(() => {
-    getUserData()
+    getUserData();
   }, []);
 
   return (
     <Box
       sx={{
         p: 3,
-        width: '100%',
-        minHeight: '100%',
-        background: '#fff',
-        overflow: 'auto',
-        scrollbarWidth: 'thin',
-        scrollbarColor: '#358156 #e6f2ec',
-        '@media (max-width: 900px)': {
+        width: "100%",
+        minHeight: "100%",
+        background: "#fff",
+        overflow: "auto",
+        scrollbarWidth: "thin",
+        scrollbarColor: "#358156 #e6f2ec",
+        "@media (max-width: 900px)": {
           p: 2,
           pb: 4,
         },
-      }}
-    >
-      <Box sx={{ maxWidth: 600, mx: 'auto', textAlign: "center" }}>
-        <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 4, fontWeight: 600, color: '#358156' }}>
+      }}>
+      <Box sx={{ maxWidth: 600, mx: "auto", textAlign: "center" }}>
+        <Typography
+          variant="h6"
+          component="h3"
+          gutterBottom
+          sx={{ mb: 4, fontWeight: 600, color: "#358156" }}>
           Configurações do Usuário
         </Typography>
 
@@ -131,21 +138,34 @@ const Settings: React.FC = () => {
               variant="contained"
               color="success"
               sx={{ px: 8, borderRadius: 999, fontWeight: 600, fontSize: 15 }}
-              onClick={handleSave}
-            >
+              onClick={handleSave}>
               Salvar
             </ActionButton>
           </Box>
         </Stack>
 
-        <Snackbar open={openError} autoHideDuration={4000} onClose={handleCloseError} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-          <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+        <Snackbar
+          open={openError}
+          autoHideDuration={4000}
+          onClose={handleCloseError}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+          <Alert
+            onClose={handleCloseError}
+            severity="error"
+            sx={{ width: "100%" }}>
             {error}
           </Alert>
         </Snackbar>
 
-        <Snackbar open={openSuccess} autoHideDuration={4000} onClose={handleCloseSuccess} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-          <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+        <Snackbar
+          open={openSuccess}
+          autoHideDuration={4000}
+          onClose={handleCloseSuccess}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+          <Alert
+            onClose={handleCloseSuccess}
+            severity="success"
+            sx={{ width: "100%" }}>
             {successMessage}
           </Alert>
         </Snackbar>
