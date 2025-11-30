@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,76 +11,55 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  Autocomplete,
-  TextField,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import CancelIcon from "@mui/icons-material/Cancel";
-import StyledTextField from "../StyledTextField";
-import DateFieldInput from "../DateFieldInput";
+import StyledTextField from "../common/StyledTextField";
+import DateFieldInput from "../common/DateFieldInput";
 import theme from "../../theme";
-import api from "../../services/api";
 
-export interface FilterValues {
+interface FilterValues {
   description: string;
   date_start: Date | null;
   date_end: Date | null;
   min: number;
   max: number;
-  categories: { name: string; id: number }[];
   status: {
+    received: boolean;
     pending: boolean;
-    paid: boolean;
     overdue: boolean;
-    due_soon: boolean;
   };
 }
 
-interface ExpenseFilterModalProps {
+interface RevenueFilterModalProps {
   open: boolean;
   onClose: () => void;
   onFilter: (values: FilterValues) => void;
-  onError: (error: unknown) => void;
-  initialValues: FilterValues;
 }
 
-const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
+const defaultValues: FilterValues = {
+  description: "",
+  date_start: null,
+  date_end: null,
+  min: 0,
+  max: 0,
+  status: {
+    received: false,
+    pending: false,
+    overdue: false,
+  },
+};
+
+const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
   open,
   onClose,
   onFilter,
-  onError,
-  initialValues,
 }) => {
-  const [values, setValues] = useState<FilterValues>({ ...initialValues });
-  const [categories, setCategories] = useState<{ name: string; id: number }[]>(
-    []
-  );
+  const [values, setValues] = useState<FilterValues>({ ...defaultValues });
 
-  const getCategories = async () => {
-    try {
-      const res = await api.get("/api/categories");
-      setCategories(
-        res.data.map((cat: { name: string; id: number }) => ({
-          name: cat.name,
-          id: cat.id,
-        }))
-      );
-    } catch {
-      // onError(err);
-    }
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, [open]);
-
-  useEffect(() => {
-    setValues({ ...initialValues });
-  }, [initialValues]);
-
+  //TODO: verificar se o valor é um número ou string
   const handleChange = (
     field: keyof FilterValues,
-    value: string | Date | null | number | { name: string; id: number }[]
+    value: string | Date | null | number
   ) => {
     setValues((prev) => ({ ...prev, [field]: value }));
   };
@@ -96,25 +75,6 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
     e.preventDefault();
     onFilter(values);
     onClose();
-  };
-
-  const handleCategoryDelete = async (id: number) => {
-    try {
-      await api.delete(`/api/category/${id}`);
-      setCategories((prevCategories) =>
-        prevCategories.filter((cat) => cat.id !== id)
-      );
-    } catch (err) {
-      onError(err);
-    }
-  };
-
-  const handleClearDates = () => {
-    setValues((prev) => ({
-      ...prev,
-      date_start: null,
-      date_end: null,
-    }));
   };
 
   return (
@@ -139,7 +99,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
       aria-labelledby="filter-dialog-title"
       aria-describedby="filter-dialog-description">
       <DialogTitle id="filter-dialog-title" sx={{ fontSize: 28, pb: 0 }}>
-        Filtrar despesas
+        Filtrar receitas
         <IconButton
           onClick={onClose}
           sx={{ position: "absolute", right: 16, top: 16 }}
@@ -166,7 +126,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
           <Box
             display="flex"
             justifyContent="space-between"
-            mb={values.date_start || values.date_end ? 0 : 2}
+            mb={2}
             sx={{ flexDirection: { xs: "column", md: "row" } }}>
             <DateFieldInput
               label="Data inicial"
@@ -182,76 +142,6 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
               fullWidth
             />
           </Box>
-          {(values.date_start || values.date_end) && (
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              mb={2}
-              sx={{
-                flexDirection: { xs: "column", md: "row" },
-                mt: { xs: 2, md: 0 },
-              }}>
-              <Button
-                onClick={handleClearDates}
-                variant="outlined"
-                sx={{
-                  mr: 2,
-                  fontSize: 10,
-                  fontWeight: 600,
-                  borderRadius: 999,
-                }}>
-                Limpar Datas
-              </Button>
-            </Box>
-          )}
-          <Autocomplete
-            value={values.categories}
-            multiple
-            filterSelectedOptions
-            options={categories}
-            getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => handleChange("categories", newValue)}
-            slotProps={{
-              listbox: {
-                sx: {
-                  scrollbarWidth: "none",
-                },
-              },
-            }}
-            sx={{ mb: 4 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Categorias"
-                placeholder="Selecionar categorias"
-              />
-            )}
-            renderOption={(props, option) => {
-              const { key, ...rest } = props;
-              return (
-                <li
-                  key={key}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                  {...rest}>
-                  {option.name}
-                  <IconButton
-                    edge="end"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      handleCategoryDelete(option.id);
-                    }}>
-                    <CancelIcon style={{ color: "#d4d4d4" }} />
-                  </IconButton>
-                </li>
-              );
-            }}
-          />
           <Box display="flex" gap={2} mb={3}>
             <Box display="flex" flexDirection="column" flex={1}>
               <Typography mb={0.5}>De:</Typography>
@@ -264,6 +154,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                   )
                 }
                 fullWidth
+                // TODO: adicionar máscara de dinheiro
               />
             </Box>
             <Box display="flex" flexDirection="column" flex={1}>
@@ -283,6 +174,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                   },
                 }}
                 fullWidth
+                // TODO: adicionar máscara de dinheiro
               />
             </Box>
           </Box>
@@ -297,6 +189,16 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                 control={
                   <Checkbox
                     color="success"
+                    checked={values.status.received}
+                    onChange={() => handleStatusChange("received")}
+                  />
+                }
+                label="Recebida"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="success"
                     checked={values.status.pending}
                     onChange={() => handleStatusChange("pending")}
                   />
@@ -307,31 +209,11 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                 control={
                   <Checkbox
                     color="success"
-                    checked={values.status.paid}
-                    onChange={() => handleStatusChange("paid")}
-                  />
-                }
-                label="Paga"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="success"
                     checked={values.status.overdue}
                     onChange={() => handleStatusChange("overdue")}
                   />
                 }
                 label="Em atraso"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="success"
-                    checked={values.status.due_soon}
-                    onChange={() => handleStatusChange("due_soon")}
-                  />
-                }
-                label="Próxima do vencimento"
               />
             </FormGroup>
           </Box>
@@ -355,4 +237,4 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
   );
 };
 
-export default ExpenseFilterModal;
+export default RevenueFilterModal;

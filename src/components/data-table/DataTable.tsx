@@ -11,7 +11,7 @@ import {
   StyledTableContainer,
   StyledTableHead,
   StyledTableRow,
-} from "./Data.styles";
+} from "./data-table.styles";
 
 export interface DataTableHeader<T> {
   label: string;

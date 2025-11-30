@@ -9,21 +9,21 @@ import {
 } from "@mui/material";
 import GenericCardList, {
   GenericCardListHeader,
-} from "../components/DataTable/GenericCardList";
-import DataTable, { DataTableHeader } from "../components/DataTable/DataTable";
+} from "../components/data-table/GenericCardList";
+import DataTable, { DataTableHeader } from "../components/data-table/DataTable";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ActionButton from "../components/ActionButton";
+import ActionButton from "../components/common/ActionButton";
 import { useEffect, useState } from "react";
 import theme from "../theme";
 import api from "../services/api";
-import { StatusTypography } from "../components/DataTable/Data.styles";
+import { StatusTypography } from "../components/data-table/data-table.styles";
 import { Expense } from "../types";
-import ExpenseCreateModal from "../components/Modal/ExpenseCreateModal";
+import ExpenseCreateModal from "../components/modals/ExpenseCreateModal";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import ExpenseFilterModal from "../components/Modal/ExpenseFilterModal";
-import { FilterValues } from "../components/Modal/ExpenseFilterModal";
-import ExpenseEditModal from "../components/Modal/ExpenseEditModal";
+import ExpenseFilterModal from "../components/modals/ExpenseFilterModal";
+import { FilterValues } from "../components/modals/ExpenseFilterModal";
+import ExpenseEditModal from "../components/modals/ExpenseEditModal";
 
 const headers: GenericCardListHeader<Expense>[] = [
   { label: "Situação", key: "situation" },

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Button, TextField, Box, Typography, DialogContent, Grid } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import InfoIcon from '@mui/icons-material/InfoOutlined';
-import theme from '../theme';
+import theme from '../../theme';
 
 export const StyledActionButton = styled(Button)`
   border-radius: 25px;
@@ -195,6 +195,9 @@ export const IconInfoOutlined = styled(InfoIcon)`
 export const StyledGrid = styled(Grid)`
   .MuiPaper-root {
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 
   @media (max-width: 900px) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { SxProps } from "@mui/material";
-import { StyledActionButton } from "./CommonComponents.styles";
+import { StyledActionButton } from "./common-components.styles";
 
 interface ActionButtonProps {
   variant?: "text" | "outlined" | "contained";

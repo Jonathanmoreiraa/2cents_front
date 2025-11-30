@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Stack } from "@mui/material";
-import { CardRow, EmptyStateBox, CardGeneric } from "./Data.styles";
+import { CardRow, EmptyStateBox, CardGeneric } from "./data-table.styles";
 
 export interface GenericCardListHeader<T> {
   label: string;

@@ -10,7 +10,7 @@ import {
   Close,
   Text,
   More,
-} from "./NotificationPanel.styles";
+} from "./notification-panel.styles";
 
 interface Notification {
   id: number;

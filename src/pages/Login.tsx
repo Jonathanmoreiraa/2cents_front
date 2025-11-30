@@ -18,7 +18,7 @@ import {
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import CloseIcon from "@mui/icons-material/Close";
-import { login, clearError } from "../store/slices/authSlice";
+import { login, clearError } from "../store/slices/auth-slice";
 import { AppDispatch, RootState } from "../store";
 import logo from "../assets/logo_2cents_white.svg";
 

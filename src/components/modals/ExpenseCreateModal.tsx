@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CloseIcon from "@mui/icons-material/Close";
-import StyledTextField from "../StyledTextField";
-import DateFieldInput from "../DateFieldInput";
-import ActionButton from "../ActionButton";
+import StyledTextField from "../common/StyledTextField";
+import DateFieldInput from "../common/DateFieldInput";
+import ActionButton from "../common/ActionButton";
 import api from "../../services/api";
 import theme from "../../theme";
 

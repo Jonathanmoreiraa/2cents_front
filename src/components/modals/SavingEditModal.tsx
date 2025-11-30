@@ -11,12 +11,12 @@ import {
   Popover,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import StyledTextField from "../StyledTextField";
-import ActionButton from "../ActionButton";
+import StyledTextField from "../common/StyledTextField";
+import ActionButton from "../common/ActionButton";
 import {
   IconInfoOutlined,
   ModalContainerContent,
-} from "../CommonComponents.styles";
+} from "../common/common-components.styles";
 import theme from "../../theme";
 import { Saving } from "../../types";
 

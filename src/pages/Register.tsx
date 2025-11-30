@@ -21,7 +21,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { register, clearError } from "../store/slices/authSlice";
+import { register, clearError } from "../store/slices/auth-slice";
 import { AppDispatch, RootState } from "../store";
 import logo from "../assets/logo_2cents_white.svg";
 

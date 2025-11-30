@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import theme from "./theme";
 import { useEffect, useState } from "react";
-import authService from "./services/authService";
+import authService from "./services/auth-service";
 import Revenues from "./pages/Revenues";
 import Expenses from "./pages/Expenses";
 import Savings from "./pages/Savings";

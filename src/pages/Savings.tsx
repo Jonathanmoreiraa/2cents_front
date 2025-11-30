@@ -11,18 +11,18 @@ import {
 import WalletIcon from "@mui/icons-material/Wallet";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ActionButton from "../components/ActionButton";
-import DataTable, { DataTableHeader } from "../components/DataTable/DataTable";
+import ActionButton from "../components/common/ActionButton";
+import DataTable, { DataTableHeader } from "../components/data-table/DataTable";
 import { Saving } from "../types";
 //import { GenericCardListHeader } from '../components/DataTable/GenericCardList';
 import theme from "../theme";
 import api from "../services/api";
-import SavingCreateModal from "../components/Modal/SavingCreateModal";
-import SimulationModal from "../components/Modal/SimulationModal";
+import SavingCreateModal from "../components/modals/SavingCreateModal";
+import SimulationModal from "../components/modals/SimulationModal";
 import GenericCardList, {
   GenericCardListHeader,
-} from "../components/DataTable/GenericCardList";
-import SavingEditModal from "../components/Modal/SavingEditModal";
+} from "../components/data-table/GenericCardList";
+import SavingEditModal from "../components/modals/SavingEditModal";
 
 const headers: DataTableHeader<Saving>[] = [
   { label: "Prioridade", key: "priority" },

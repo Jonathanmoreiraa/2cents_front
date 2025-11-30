@@ -9,18 +9,18 @@ import {
 import FilterListIcon from "@mui/icons-material/FilterList";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DataTable, { DataTableHeader } from "../components/DataTable/DataTable";
-import ActionButton from "../components/ActionButton";
-import { StatusTypography } from "../components/DataTable/Data.styles";
+import DataTable, { DataTableHeader } from "../components/data-table/DataTable";
+import ActionButton from "../components/common/ActionButton";
+import { StatusTypography } from "../components/data-table/data-table.styles";
 import api from "../services/api";
 import GenericCardList, {
   GenericCardListHeader,
-} from "../components/DataTable/GenericCardList";
-import RevenueFilterModal from "../components/Modal/RevenueFilterModal";
-import RevenueCreateModal from "../components/Modal/RevenueCreateModal";
+} from "../components/data-table/GenericCardList";
+import RevenueFilterModal from "../components/modals/RevenueFilterModal";
+import RevenueCreateModal from "../components/modals/RevenueCreateModal";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import RevenueEditModal from "../components/Modal/RevenueEditModal";
+import RevenueEditModal from "../components/modals/RevenueEditModal";
 import { ApiRevenue, Revenue } from "../types";
 import theme from "../theme";
 

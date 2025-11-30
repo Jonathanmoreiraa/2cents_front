@@ -20,9 +20,9 @@ import {
   SubMenuItem,
   BottomSection,
   ExitItem,
-} from "./Sidebar.styles";
+} from "./sidebar.styles";
 import { useDispatch } from "react-redux";
-import { logout } from "../../store/slices/authSlice";
+import { logout } from "../../store/slices/auth-slice";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import logo from "../../assets/logo_2cents_white.svg";

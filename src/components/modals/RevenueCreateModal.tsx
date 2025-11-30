@@ -11,9 +11,9 @@ import {
   Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import StyledTextField from "../StyledTextField";
-import DateFieldInput from "../DateFieldInput";
-import ActionButton from "../ActionButton";
+import StyledTextField from "../common/StyledTextField";
+import DateFieldInput from "../common/DateFieldInput";
+import ActionButton from "../common/ActionButton";
 
 interface RevenueCreateModalProps {
   open: boolean;

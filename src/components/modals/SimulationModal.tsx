@@ -11,15 +11,16 @@ import {
   DialogActions,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import StyledTextField from "../StyledTextField";
-import { Title } from "../Sidebar/NotificationPanel.styles";
+import StyledTextField from "../common/StyledTextField";
+import { Title } from "../Sidebar/notification-panel.styles";
 import {
   IconInfoOutlined,
   ModalContainerContent,
-} from "../CommonComponents.styles";
-import ActionButton from "../ActionButton";
+} from "../common/common-components.styles";
+import ActionButton from "../common/ActionButton";
 import api from "../../services/api";
 import theme from "../../theme";
+import { formatToMoney } from "../../utils/format-money";
 
 interface SimulationModalProps {
   open: boolean;
@@ -36,14 +37,6 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
   const months = monthsToGoal == 1 ? "mês" : "meses";
   const openPopSimulation = Boolean(anchorEl);
   const idPopSimulation = openPopSimulation ? "simple-popover" : undefined;
-
-  const formatToMoney = (value: number) => {
-    const moneyFormat = new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-    return moneyFormat.format(value);
-  };
 
   const handleClickSimulation = (event: React.MouseEvent<SVGSVGElement>) => {
     setAnchorEl(event.currentTarget);

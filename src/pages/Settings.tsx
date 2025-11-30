@@ -7,9 +7,9 @@ import {
   Alert,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import ActionButton from "../components/ActionButton";
-import DateFieldInput from "../components/DateFieldInput";
-import authService from "../services/authService";
+import ActionButton from "../components/common/ActionButton";
+import DateFieldInput from "../components/common/DateFieldInput";
+import authService from "../services/auth-service";
 import api from "../services/api";
 
 const Settings: React.FC = () => {
