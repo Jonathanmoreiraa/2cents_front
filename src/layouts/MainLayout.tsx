@@ -15,7 +15,7 @@ import {
   // NotificationDot,
   MobileNotificationPanelWrapper,
   OverlayNotification,
-} from "./MainLayout.styles";
+} from "./main-layout.styles";
 
 const MainLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

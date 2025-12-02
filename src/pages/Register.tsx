@@ -80,7 +80,7 @@ const Register: React.FC = () => {
   }, [success, error, navigate]);
 
   const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
+    _: React.SyntheticEvent | Event,
     reason?: string
   ) => {
     if (reason === "clickaway") {

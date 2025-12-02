@@ -70,7 +70,6 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
   };
 
   const handleCategoryChange = async (
-    event: React.SyntheticEvent | undefined,
     value: string | undefined
   ) => {
     if (!value) {
@@ -245,7 +244,6 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                     event.preventDefault();
                     event.stopPropagation();
                     handleCategoryChange(
-                      undefined,
                       params.inputProps.value as string | undefined
                     );
                   }
@@ -259,7 +257,7 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                 <li
                   key={key}
                   onMouseDown={() => {
-                    handleCategoryChange(undefined, option.name);
+                    handleCategoryChange(option.name);
                     setCategoryId(option.id);
                   }}
                   style={{

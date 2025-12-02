@@ -82,3 +82,27 @@ export interface Saving {
   should_be_expense?: number;
   is_emergency_fund?: number;
 }
+
+export interface BarChartDataType {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor?: string;
+  }[];
+}
+
+export interface DoughnutChartType {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    borderWidth: number;
+  }[];
+}
+
+export interface TaxesTable {
+  name: string,
+  value: number,
+}
+

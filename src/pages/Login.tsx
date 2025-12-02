@@ -54,7 +54,7 @@ const Login: React.FC = () => {
   }, [error]);
 
   const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
+    _: React.SyntheticEvent | Event,
     reason?: string
   ) => {
     if (reason === "clickaway") {
@@ -197,7 +197,7 @@ const Login: React.FC = () => {
               Não possui conta?{" "}
               <Link
                 component={RouterLink}
-                to="/register"
+                to="/registro"
                 sx={{
                   color: "#358156",
                   textDecoration: "none",

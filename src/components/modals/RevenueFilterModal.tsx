@@ -17,7 +17,7 @@ import StyledTextField from "../common/StyledTextField";
 import DateFieldInput from "../common/DateFieldInput";
 import theme from "../../theme";
 
-interface FilterValues {
+export interface FilterValues {
   description: string;
   date_start: Date | null;
   date_end: Date | null;

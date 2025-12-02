@@ -23,6 +23,8 @@ import Alert from "@mui/material/Alert";
 import RevenueEditModal from "../components/modals/RevenueEditModal";
 import { ApiRevenue, Revenue } from "../types";
 import theme from "../theme";
+import { FilterValues } from "../components/modals/RevenueFilterModal";
+import { getFirstAndLastDayOfMonth } from "../utils/get-first-last-days-month";
 
 const headers: DataTableHeader<Revenue>[] = [
   { label: "Situação", key: "status" },
@@ -50,6 +52,19 @@ const Revenues: React.FC = () => {
   const [openError, setOpenError] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [revenueData, setRevenueData] = useState<Revenue | null>(null);
+   const { firstDay, lastDay } = getFirstAndLastDayOfMonth();
+  const defaultFilterValues = {
+    description: "",
+    date_start: firstDay,
+    date_end: lastDay,
+    min: 0,
+    max: 0,
+    status: {
+      pending: false,
+      overdue: false,
+      received: false,
+    },
+  };
   const totalPages = Math.max(1, Math.ceil(revenues.length / ITEMS_PER_PAGE));
   const paginated = revenues.slice(
     (page - 1) * ITEMS_PER_PAGE,
@@ -132,6 +147,7 @@ const Revenues: React.FC = () => {
     try {
       const res = await api.post("/api/revenue/filter", values);
       setRevenues(formatRevenues(res.data));
+      setLoading(false);
     } catch (err) {
       handleError(err);
     }
@@ -145,11 +161,12 @@ const Revenues: React.FC = () => {
         : "Erro ao efetuar a ação, tente novamente.";
     setError(errorMessage);
     setOpenError(true);
+    setLoading(false);
   };
 
   useEffect(() => {
     setLoading(true);
-    handleGetRevenues();
+    handleFilter(defaultFilterValues);
   }, []);
 
   return (

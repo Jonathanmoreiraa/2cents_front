@@ -77,7 +77,6 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
   };
 
   const handleCategoryChange = async (
-    event: React.SyntheticEvent | undefined,
     value: string | undefined
   ) => {
     if (!value) {
@@ -258,7 +257,6 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
                     event.preventDefault();
                     event.stopPropagation();
                     handleCategoryChange(
-                      undefined,
                       params.inputProps.value as string | undefined
                     );
                   }
@@ -271,7 +269,7 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
                 <li
                   key={key}
                   onMouseDown={() => {
-                    handleCategoryChange(undefined, option.name);
+                    handleCategoryChange(option.name);
                     setCategoryId(option.id);
                   }}
                   style={{

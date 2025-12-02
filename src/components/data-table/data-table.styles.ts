@@ -27,7 +27,6 @@ export const StyledTableRow = styled(TableRow)({
     fontSize: 17,
     color: '#666',
     borderBottom: '1px solid #E0E0E0',
-    padding: '18px 0',
     paddingLeft: 8,
     textAlign: "center",
     maxWidth: "150px",
@@ -47,10 +46,10 @@ export const StatusTypography = styled(Typography)<{ status: string }>(({ status
     status === 'Received' || status === 'Paga'
       ? theme.palette.primary.main
       : status === 'Próxima do vencimento'
-      ? '#B0A748'
-      : status === 'Overdue' || status === 'Em atraso'
-      ? '#FF5A5F'
-      : '#888',
+        ? '#B0A748'
+        : status === 'Overdue' || status === 'Em atraso'
+          ? '#FF5A5F'
+          : '#888',
 }));
 
 export const PaginationWrapper = styled(Box)({

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ArcElement,
   BarElement,
@@ -11,10 +11,15 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import { Box, Container, Grid, Typography, Paper } from "@mui/material";
-import { StyledGrid } from "../components/CommonComponents.styles";
+import { StyledGrid } from "../components/common/common-components.styles";
+import { BarChartDataType, DoughnutChartType, TaxesTable } from "../types";
+import { formatToMoney } from "../utils/format-money";
+import { generateRandomColor } from "../utils/generate-random-color";
 import theme from "../theme";
+import api from "../services/api";
+import DataTable from "../components/data-table/DataTable";
 
 Chart.register(
   CategoryScale,
@@ -29,30 +34,26 @@ Chart.register(
 );
 
 const Home: React.FC = () => {
-  const COLORS = {
-    health: "#387B57",
-    transport: "#195B8A",
-    food: "#BDE2F2",
-    leisure: "#E56D5B",
-  };
+  const monthOrder = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
 
-  const barData = {
-    labels: ["Jan", "Fev", "Mar", "Abr", "Maio", "Jun"],
-    datasets: [
-      {
-        label: "Receitas",
-        data: [750, 1500, 950, 1200, 700, 700],
-        backgroundColor: theme.palette.primary.main,
-      },
-      {
-        label: "Despesas",
-        data: [500, 950, 600, 800, 550, 500],
-        backgroundColor: theme.palette.error.main,
-      },
-    ],
-  };
-
-  const barOptions: any = {
+  // Bar Chart
+  const defaultChart = { labels: [], datasets: [] };
+  const defaultTax = { name: "", value: 0 };
+  const [barDataset, setBarDataset] = useState<BarChartDataType>(defaultChart);
+  const barOptions: object = {
     responsive: true,
     maintainAspectRatio: true,
     plugins: {
@@ -83,22 +84,15 @@ const Home: React.FC = () => {
     },
   };
 
-  const totalExpenses = 1800;
-  const totalRecipes = 2500;
-  const percentage = Math.round((totalExpenses / totalRecipes) * 100);
-
-  const doughnutData = {
-    labels: ["Despesas", "Restante"],
-    datasets: [
-      {
-        data: [totalExpenses, Math.max(totalRecipes - totalExpenses, 0)],
-        backgroundColor: [theme.palette.error.main, theme.palette.primary.main],
-        borderWidth: 0,
-      },
-    ],
-  };
-
-  const doughnutOptions: any = {
+  // Situation Doughnut Chart
+  const [situationDataset, setSituationDataset] =
+    useState<DoughnutChartType>(defaultChart);
+  const [totalExpenses, setTotalExpenses] = useState<number>(0);
+  const [totalRecipes, setTotalRecipes] = useState<number>(0);
+  const [percentage, setPercentage] = useState<number>(0);
+  const [situationMessage, setSituationMessage] = useState<string>("");
+  const [situationColor, setSituationColor] = useState<string>("");
+  const doughnutOptions: object = {
     cutout: "90%",
     plugins: {
       legend: { display: false },
@@ -108,23 +102,10 @@ const Home: React.FC = () => {
     maintainAspectRatio: false,
   };
 
-  const categoryData = {
-    labels: ["Saúde", "Alimentação", "Lazer", "Transporte"],
-    datasets: [
-      {
-        data: [20, 35, 25, 20],
-        backgroundColor: [
-          COLORS.health,
-          COLORS.food,
-          COLORS.leisure,
-          COLORS.transport,
-        ],
-        borderWidth: 0,
-      },
-    ],
-  };
-
-  const categoryOptions: any = {
+  // Category Doughnut Chart
+  const [categoryDataset, setCategoryDataset] =
+    useState<DoughnutChartType>(defaultChart);
+  const categoryOptions: object = {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "80%",
@@ -132,7 +113,7 @@ const Home: React.FC = () => {
       legend: {
         display: true,
         position: "bottom",
-        align: "start",
+        align: "center",
         labels: {
           usePointStyle: true,
           boxWidth: 8,
@@ -144,34 +125,142 @@ const Home: React.FC = () => {
     },
   };
 
-  const lineData = {
-    labels: ["2023", "2024", "2025"],
-    datasets: [
-      {
-        label: "Patrimônio",
-        data: [10000, 20000, 28000],
-        borderColor: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.main,
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-      },
-    ],
+  const [taxes, setTaxes] = useState<TaxesTable[]>([defaultTax]);
+
+  const getRevenuesExpensesData = async () => {
+    const response = await api.get(`/api/dashboard/last-six-months`);
+    if (response.data) {
+      const { revenues, expenses } = response.data;
+      const allMonths = Array.from(
+        new Set([
+          ...revenues.map((r: { month: string; total: number }) => r.month),
+          ...expenses.map((d: { month: string; total: number }) => d.month),
+        ])
+      ).sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+
+      const receitaMap = Object.fromEntries(
+        revenues.map((r: { month: string; total: number }) => [
+          r.month,
+          r.total,
+        ])
+      );
+
+      const despesaMap = Object.fromEntries(
+        expenses.map((d: { month: string; total: number }) => [
+          d.month,
+          d.total,
+        ])
+      );
+
+      const receitaData = allMonths.map((month) => receitaMap[month] ?? 0);
+      const despesaData = allMonths.map((month) => despesaMap[month] ?? 0);
+
+      const datasets = [
+        {
+          label: "Receitas",
+          data: receitaData,
+          backgroundColor: theme.palette.primary.main,
+        },
+        {
+          label: "Despesas",
+          data: despesaData,
+          backgroundColor: theme.palette.error.main,
+        },
+      ];
+
+      setBarDataset({ labels: allMonths, datasets: datasets });
+    }
   };
 
-  const lineOptions: any = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { ticks: { maxRotation: 0, minRotation: 0 } },
-      y: {
-        beginAtZero: false,
-        ticks: { stepSize: 1000 },
-        grid: { color: "#e0e0e0", drawBorder: false },
-      },
-    },
+  const getSituationData = async () => {
+    const response = await api.get(`/api/dashboard/month-situation`);
+    if (response.data) {
+      const labels = ["Despesas", "Saldo"];
+
+      const { revenues, expenses } = response.data;
+      const totalRevenue = revenues[0].total ?? 0;
+      const totalExpense = expenses[0].total ?? 0;
+
+      const datasets = [
+        {
+          data: [totalExpense, Math.max(totalRevenue - totalExpense, 0)],
+          backgroundColor: [
+            theme.palette.error.main,
+            theme.palette.primary.main,
+          ],
+          borderWidth: 0,
+        },
+      ];
+
+      const resultPercentage =
+        totalRevenue > 0 ? Math.round((totalExpense / totalRevenue) * 100) : 0;
+
+      switch (true) {
+        case resultPercentage <= 55:
+          setSituationMessage(
+            "Parabéns! Seu planejamento financeiro está funcionando muito bem."
+          );
+          setSituationColor(theme.palette.primary.main);
+          break;
+
+        case resultPercentage <= 85:
+          setSituationMessage(
+            "Você gastou acima do recomendado, mas ainda está no controle. Atente-se!"
+          );
+          setSituationColor(theme.palette.warning.main);
+          break;
+
+        default:
+          setSituationMessage(
+            "Este mês seus gastos foram muito altos. Ajustes são recomendados para evitar problemas financeiros."
+          );
+          setSituationColor(theme.palette.error.main);
+      }
+
+      if (!Number.isFinite(resultPercentage)) {
+        setSituationMessage("Não foi possível calcular a situação deste mês.");
+        setSituationColor(theme.palette.grey[500]);
+      }
+
+      setTotalExpenses(totalExpense);
+      setTotalRecipes(totalRevenue);
+      setPercentage(resultPercentage);
+      setSituationDataset({ labels, datasets });
+    }
+  };
+
+  const getExpenseByCategoryData = async () => {
+    const response = await api.get(`/api/dashboard/expenses-by-category`);
+    if (response.data) {
+      const categories = response.data;
+      const labels: string[] = [];
+      const data: number[] = [];
+      const colors: string[] = categories.map((_: unknown, index: number) =>
+        generateRandomColor(index)
+      );
+
+      categories.map((cat: { category: number; name: string }) => {
+        labels.push(cat.name);
+        data.push(cat.category ?? 0);
+      });
+
+      const datasets = [
+        {
+          data: data,
+          backgroundColor: colors,
+          borderWidth: 0,
+        },
+      ];
+
+      setCategoryDataset({ labels: labels, datasets: datasets });
+    }
+  };
+
+  const getTaxes = async () => {
+    const response = await api.get(`/api/dashboard/last-metric`);
+    if (response.data) {
+      setTaxes(response.data);
+    }
   };
 
   const controlData = {
@@ -179,20 +268,20 @@ const Home: React.FC = () => {
     datasets: [
       {
         label: "Orçamento",
-        data: [1500],
+        data: [totalRecipes],
         backgroundColor: theme.palette.primary.main,
         maxBarThickness: 40,
       },
       {
         label: "Gasto real",
-        data: [1200],
+        data: [totalExpenses],
         backgroundColor: theme.palette.error.main,
         maxBarThickness: 40,
       },
     ],
   };
 
-  const controlOptions: any = {
+  const controlOptions: object = {
     indexAxis: "x",
     responsive: true,
     maintainAspectRatio: false,
@@ -207,21 +296,28 @@ const Home: React.FC = () => {
     },
   };
 
+  useEffect(() => {
+    getRevenuesExpensesData();
+    getSituationData();
+    getExpenseByCategoryData();
+    getTaxes();
+  }, []);
+
   return (
     <Container sx={{ p: 2 }}>
       <Grid container spacing={3} columns={10} justifyContent="space-between">
         <StyledGrid size={6.5}>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
-            <Bar data={barData} options={barOptions} />
+            <Bar data={barDataset} options={barOptions} />
           </Paper>
         </StyledGrid>
 
         <StyledGrid>
           <Paper
             elevation={3}
-            sx={{ p: 2, height: "100%", textAlign: "center" }}>
+            sx={{ p: 2, height: "100%", textAlign: "center", width: "21rem" }}>
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
-              Situação mensal (NOV/25)
+              Situação mensal
             </Typography>
 
             <Box
@@ -231,7 +327,7 @@ const Home: React.FC = () => {
                 height: 200,
                 mx: "auto",
               }}>
-              <Doughnut data={doughnutData} options={doughnutOptions} />
+              <Doughnut data={situationDataset} options={doughnutOptions} />
 
               <Box
                 sx={{
@@ -248,20 +344,13 @@ const Home: React.FC = () => {
                 <Typography
                   variant="h4"
                   fontWeight="bold"
-                  color={theme.palette.warning.main}>
+                  color={situationColor}>
                   {percentage}%
                 </Typography>
                 <Typography
                   variant="caption"
-                  color="text.secondary"
-                  sx={{ mt: -1 }}>
-                  Atente-se!
-                </Typography>
-                <Typography
-                  variant="caption"
                   sx={{ fontSize: 10, width: "70%" }}>
-                  Você gastou acima do recomendado, mas tudo bem, fique
-                  atento(a)!
+                  {situationMessage}
                 </Typography>
               </Box>
             </Box>
@@ -278,13 +367,15 @@ const Home: React.FC = () => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      bgcolor: theme.palette.error.main,
+                      bgcolor: theme.palette.primary.main,
                       mr: 1,
                     }}
                   />
-                  <Typography>Despesas</Typography>
+                  <Typography>Receitas</Typography>
                 </Box>
-                <Typography fontWeight="bold">R$ 1800</Typography>
+                <Typography fontWeight="bold">
+                  {formatToMoney(totalRecipes)}
+                </Typography>
               </Box>
 
               <Box display="flex" justifyContent="space-between" width={200}>
@@ -294,13 +385,15 @@ const Home: React.FC = () => {
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      bgcolor: theme.palette.primary.main,
+                      bgcolor: theme.palette.error.main,
                       mr: 1,
                     }}
                   />
-                  <Typography>Receitas</Typography>
+                  <Typography>Despesas</Typography>
                 </Box>
-                <Typography fontWeight="bold">R$ 2500</Typography>
+                <Typography fontWeight="bold">
+                  {formatToMoney(totalExpenses)}
+                </Typography>
               </Box>
             </Box>
           </Paper>
@@ -316,25 +409,13 @@ const Home: React.FC = () => {
         <StyledGrid>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
             <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-              Gasto por categoria
+              Despesas por categoria (R$)
             </Typography>
             <Box height={280}>
-              <Doughnut data={categoryData} options={categoryOptions} />
+              <Doughnut data={categoryDataset} options={categoryOptions} />
             </Box>
           </Paper>
         </StyledGrid>
-
-        <StyledGrid>
-          <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
-            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-              Projeção de patrimônio
-            </Typography>
-            <Box height={200}>
-              <Line data={lineData} options={lineOptions} />
-            </Box>
-          </Paper>
-        </StyledGrid>
-
         <StyledGrid>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
             <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
@@ -372,6 +453,23 @@ const Home: React.FC = () => {
                 <Typography variant="body2">Gasto real</Typography>
               </Box>
             </Box>
+          </Paper>
+        </StyledGrid>
+        <StyledGrid>
+          <Paper elevation={3} sx={{ pr: 4, pl: 4, pt: 2, height: "100%" }}>
+            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+              Indicadores financeiros
+            </Typography>
+            <DataTable
+              items={taxes}
+              headers={[
+                { label: "Taxa", key: "name" },
+                { label: "Valor (%)", key: "value" },
+              ]}
+              renderCell={(item, key) => {
+                return item[key];
+              }}
+            />
           </Paper>
         </StyledGrid>
       </Grid>

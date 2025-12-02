@@ -211,7 +211,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
             filterSelectedOptions
             options={categories}
             getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => handleChange("categories", newValue)}
+            onChange={(_, newValue) => handleChange("categories", newValue)}
             slotProps={{
               listbox: {
                 sx: {

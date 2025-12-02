@@ -24,6 +24,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import ExpenseFilterModal from "../components/modals/ExpenseFilterModal";
 import { FilterValues } from "../components/modals/ExpenseFilterModal";
 import ExpenseEditModal from "../components/modals/ExpenseEditModal";
+import { getFirstAndLastDayOfMonth } from "../utils/get-first-last-days-month";
 
 const headers: GenericCardListHeader<Expense>[] = [
   { label: "Situação", key: "situation" },
@@ -44,14 +45,6 @@ const tableHeaders: DataTableHeader<Expense>[] = [
 const formatDate = (date: Date | null) => {
   if (date == null) return null;
   return date.toISOString().split("T")[0];
-};
-
-const getFirstAndLastDayOfMonth = () => {
-  const now = new Date();
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-  return { firstDay, lastDay };
 };
 
 const Expenses = () => {
