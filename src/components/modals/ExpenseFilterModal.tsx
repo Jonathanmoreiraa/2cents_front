@@ -172,14 +172,12 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
               label="Data inicial"
               value={values.date_start || undefined}
               onChange={(newValue) => handleChange("date_start", newValue)}
-              fullWidth
               sx={{ mb: 2 }}
             />
             <DateFieldInput
               label="Data final"
               value={values.date_end || undefined}
               onChange={(newValue) => handleChange("date_end", newValue)}
-              fullWidth
             />
           </Box>
           {(values.date_start || values.date_end) && (

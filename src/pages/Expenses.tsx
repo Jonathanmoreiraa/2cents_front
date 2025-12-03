@@ -53,7 +53,9 @@ const Expenses = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [openError, setOpenError] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const [page, setPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalAddOpen, setModalAddOpen] = useState(false);
@@ -105,7 +107,10 @@ const Expenses = () => {
         : "Erro ao efetuar a ação, tente novamente.";
     setError(errorMessage);
     setOpenError(true);
+    setOpenError(false);
   };
+
+  const handleCloseSuccess = () => setOpenSuccess(false);
 
   const handleFilter = async (values: FilterValues) => {
     try {
@@ -135,9 +140,16 @@ const Expenses = () => {
         payment_day: newData.payment_day || 0,
       };
 
-      await api.post("/api/expense/add", payload);
-      setModalAddOpen(false);
-      handleGetExpenses();
+      const response = await api.post("/api/expense/add", payload);
+      if (response.data) {
+        setModalAddOpen(false);
+        setOpenSuccess(true);
+        setSuccess(response.data.message);
+
+        if (filterValues) {
+          handleGetExpenses();
+        }
+      }
     } catch (err) {
       handleError(err);
     }
@@ -156,12 +168,13 @@ const Expenses = () => {
     category_id: number;
   }) => {
     try {
-      const payload = {
-        ...data,
-      };
-      await api.put(`/api/expense/${modalEditValues.id}`, payload);
-      setModalEditOpen(false);
-      handleGetExpenses();
+      const response = await api.put(`/api/expense/${modalEditValues.id}`, {...data});
+      if (response.data) {
+        setModalEditOpen(false);
+        handleGetExpenses();
+        setOpenSuccess(true);
+        setSuccess(response.data.message);
+      }
     } catch (err) {
       handleError(err);
     }
@@ -169,10 +182,14 @@ const Expenses = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      if (!window.confirm("Tem certeza que deseja deletar esta despesa?"))
-        return;
-      await api.delete(`/api/expense/${id}`);
-      handleGetExpenses();
+      if (!window.confirm("Tem certeza que deseja deletar esta despesa?")) {return};
+      const response = await api.delete(`/api/expense/${id}`);
+      if (response.data) {
+        setModalEditOpen(false);
+        handleGetExpenses();
+        setOpenSuccess(true);
+        setSuccess(response.data.message);
+      }
     } catch (err) {
       handleError(err);
     }
@@ -202,6 +219,8 @@ const Expenses = () => {
       };
     });
   };
+
+
 
   useEffect(() => {
     setLoading(true);
@@ -368,8 +387,19 @@ const Expenses = () => {
           disabled={page === totalPages}>
           Próxima
         </ActionButton>
-      </Stack>
-      {/* TODO: adicionar snackbar de sucesso */}
+    </Stack>
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: "100%" }}>
+          {success}
+        </Alert>
+      </Snackbar>
       <Snackbar
         open={openError}
         autoHideDuration={4000}

@@ -16,14 +16,15 @@ import api from "../services/api";
 import GenericCardList, {
   GenericCardListHeader,
 } from "../components/data-table/GenericCardList";
-import RevenueFilterModal from "../components/modals/RevenueFilterModal";
+import RevenueFilterModal, {
+  FilterValues,
+} from "../components/modals/RevenueFilterModal";
 import RevenueCreateModal from "../components/modals/RevenueCreateModal";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import RevenueEditModal from "../components/modals/RevenueEditModal";
 import { ApiRevenue, Revenue } from "../types";
 import theme from "../theme";
-import { FilterValues } from "../components/modals/RevenueFilterModal";
 import { getFirstAndLastDayOfMonth } from "../utils/get-first-last-days-month";
 
 const headers: DataTableHeader<Revenue>[] = [
@@ -49,11 +50,13 @@ const Revenues: React.FC = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [openError, setOpenError] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [revenueData, setRevenueData] = useState<Revenue | null>(null);
-   const { firstDay, lastDay } = getFirstAndLastDayOfMonth();
-  const defaultFilterValues = {
+  const { firstDay, lastDay } = getFirstAndLastDayOfMonth();
+  const [defaultFilterValues, setDefaultFilterValues] = useState<FilterValues>({
     description: "",
     date_start: firstDay,
     date_end: lastDay,
@@ -64,7 +67,7 @@ const Revenues: React.FC = () => {
       overdue: false,
       received: false,
     },
-  };
+  });
   const totalPages = Math.max(1, Math.ceil(revenues.length / ITEMS_PER_PAGE));
   const paginated = revenues.slice(
     (page - 1) * ITEMS_PER_PAGE,
@@ -75,26 +78,21 @@ const Revenues: React.FC = () => {
   const handleCloseAddModal = () => setModalAddOpen(false);
 
   const handleCloseError = () => setOpenError(false);
+  const handleCloseSuccess = () => setOpenSuccess(false);
 
   const handleCreateRevenue = async (data: object) => {
     try {
-      await api.post("/api/revenue/add", data);
-      handleGetRevenues();
-      handleCloseAddModal();
+      const response = await api.post("/api/revenue/add", data);
+      if (response.data) {
+        handleFilter();
+        handleCloseAddModal();
+        setOpenSuccess(true);
+        setSuccess(response.data.message);
+      }
     } catch (err) {
       handleError(err);
+      handleCloseSuccess();
     }
-  };
-
-  const handleGetRevenues = async () => {
-    try {
-      const res = await api.get("/api/revenues");
-      setRevenues(formatRevenues(res.data));
-    } catch (err) {
-      handleError(err);
-    }
-
-    setLoading(false);
   };
 
   const formatRevenues = (data: ApiRevenue[]) => {
@@ -124,30 +122,41 @@ const Revenues: React.FC = () => {
 
   const handleEdit = async (data: object) => {
     try {
-      await api.put(`/api/revenue/${revenueData?.id}`, data);
-      handleGetRevenues();
-      setEditModalOpen(false);
+      const response = await api.put(`/api/revenue/${revenueData?.id}`, data);
+      if (response.data) {
+        handleFilter();
+        setEditModalOpen(false);
+        setOpenSuccess(true);
+        setSuccess(response.data.message);
+      }
     } catch (err) {
       handleError(err);
+      handleCloseSuccess();
     }
   };
 
   const handleDelete = async (id: number) => {
     try {
-      if (!window.confirm("Tem certeza que deseja deletar esta receita?"))
+      if (!window.confirm("Tem certeza que deseja deletar esta receita?")) {
         return;
-      await api.delete(`/api/revenue/${id}`);
-      handleGetRevenues();
+      }
+      const response = await api.delete(`/api/revenue/${id}`);
+      if (response.data) {
+        handleFilter();
+        setOpenSuccess(true);
+        setSuccess(response.data.message);
+      }
     } catch (err) {
       handleError(err);
     }
   };
 
-  const handleFilter = async (values: object) => {
+  const handleFilter = async (values?: FilterValues) => {
     try {
-      const res = await api.post("/api/revenue/filter", values);
+      const res = await api.post("/api/revenue/filter", values ?? defaultFilterValues);
       setRevenues(formatRevenues(res.data));
       setLoading(false);
+      setDefaultFilterValues(values ?? defaultFilterValues);
     } catch (err) {
       handleError(err);
     }
@@ -329,7 +338,18 @@ const Revenues: React.FC = () => {
           Próxima
         </ActionButton>
       </Stack>
-      {/* TODO: adicionar snackbar de sucesso */}
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: "100%" }}>
+          {success}
+        </Alert>
+      </Snackbar>
       <Snackbar
         open={openError}
         autoHideDuration={4000}

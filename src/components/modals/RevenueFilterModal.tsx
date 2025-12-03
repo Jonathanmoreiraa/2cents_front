@@ -132,14 +132,12 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
               label="Data inicial"
               value={values.date_start || undefined}
               onChange={(newValue) => handleChange("date_start", newValue)}
-              fullWidth
               sx={{ mb: 2 }}
             />
             <DateFieldInput
               label="Data final"
               value={values.date_end || undefined}
               onChange={(newValue) => handleChange("date_end", newValue)}
-              fullWidth
             />
           </Box>
           <Box display="flex" gap={2} mb={3}>

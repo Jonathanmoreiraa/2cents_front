@@ -4,7 +4,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: 'rgba(53, 129, 86, 1)',
-      light: ']'
+      light: 'rgba(53, 129, 86, 0.3)'
     },
     secondary: {
       main: 'rgba(105, 166, 131, 1)',
@@ -13,10 +13,10 @@ const theme = createTheme({
       main: 'rgba(176, 167, 72, 1)'
     },
     info: {
-      main: '#999999'
+      main: 'rgba(153, 153, 153, 1)'
     },
     error: {
-      main: '#F57665',
+      main: 'rgba(245, 118, 101, 1)',
     },
   },
   typography: {

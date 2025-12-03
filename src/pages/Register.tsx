@@ -18,19 +18,19 @@ import {
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import PersonIcon from "@mui/icons-material/Person";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { register, clearError } from "../store/slices/auth-slice";
 import { AppDispatch, RootState } from "../store";
 import logo from "../assets/logo_2cents_white.svg";
+import DateFieldInput from "../components/common/DateFieldInput";
 
 const Register: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     email?: string;
@@ -90,11 +90,6 @@ const Register: React.FC = () => {
     dispatch(clearError());
   };
 
-  const formatBirthDate = (date: string): string => {
-    if (!date) return "";
-    return `${date}T00:00:00Z`;
-  };
-
   const validateForm = (): boolean => {
     const errors: {
       name?: string;
@@ -150,7 +145,7 @@ const Register: React.FC = () => {
           name,
           email,
           password,
-          birth_date: formatBirthDate(birthDate),
+          birth_date: birthDate!.toString(),
         })
       );
     }
@@ -234,27 +229,24 @@ const Register: React.FC = () => {
               sx={{ mb: 2 }}
             />
 
-            <TextField
-              placeholder="Data de Nascimento"
-              type="date"
-              fullWidth
-              margin="normal"
+            <DateFieldInput
               value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              error={!!formErrors.birthDate}
-              helperText={formErrors.birthDate}
+              onChange={setBirthDate}
               disabled={loading || registrationSuccess}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <CalendarTodayIcon sx={{ color: "#358156" }} />
-                  </InputAdornment>
-                ),
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  margin: "normal",
+                  error: !!formErrors.birthDate,
+                  helperText: formErrors.birthDate,
+                },
+                inputAdornment: {
+                  component: 'span',
+                },
+                 field: {
+                  openPickerButtonPosition: 'start',
+                },
               }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              sx={{ mb: 2 }}
             />
 
             <TextField
