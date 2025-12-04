@@ -41,7 +41,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       startIcon={startIcon}
       endIcon={endIcon}
       sx={sx}
-      type={type}>
+      type={type}
+    >
       {children}
     </StyledActionButton>
   );

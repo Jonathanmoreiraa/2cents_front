@@ -62,7 +62,7 @@ const Expenses = () => {
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const paginated = expenses.slice(
     (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
+    page * ITEMS_PER_PAGE,
   );
   const { firstDay, lastDay } = getFirstAndLastDayOfMonth();
   const [filterValues, setFilterValues] = useState<FilterValues>({
@@ -80,7 +80,7 @@ const Expenses = () => {
     },
   });
   const [modalEditValues, setModalEditValues] = useState<Expense>(
-    {} as Expense
+    {} as Expense,
   );
   const totalPages = Math.max(1, Math.ceil(expenses.length / ITEMS_PER_PAGE));
 
@@ -168,7 +168,9 @@ const Expenses = () => {
     category_id: number;
   }) => {
     try {
-      const response = await api.put(`/api/expense/${modalEditValues.id}`, {...data});
+      const response = await api.put(`/api/expense/${modalEditValues.id}`, {
+        ...data,
+      });
       if (response.data) {
         setModalEditOpen(false);
         handleGetExpenses();
@@ -182,7 +184,9 @@ const Expenses = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      if (!window.confirm("Tem certeza que deseja deletar esta despesa?")) {return};
+      if (!window.confirm("Tem certeza que deseja deletar esta despesa?")) {
+        return;
+      }
       const response = await api.delete(`/api/expense/${id}`);
       if (response.data) {
         setModalEditOpen(false);
@@ -220,8 +224,6 @@ const Expenses = () => {
     });
   };
 
-
-
   useEffect(() => {
     setLoading(true);
     handleGetExpenses();
@@ -233,13 +235,15 @@ const Expenses = () => {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        mb={3}>
+        mb={3}
+      >
         <Stack direction="row" spacing={2}>
           <ActionButton
             variant="outlined"
             color="success"
             endIcon={<FilterListIcon />}
-            onClick={() => setFilterOpen(true)}>
+            onClick={() => setFilterOpen(true)}
+          >
             Filtrar
           </ActionButton>
         </Stack>
@@ -247,7 +251,8 @@ const Expenses = () => {
           <ActionButton
             onClick={handleOpenAddModal}
             variant="outlined"
-            color="success">
+            color="success"
+          >
             Cadastrar
           </ActionButton>
         </Stack>
@@ -310,13 +315,15 @@ const Expenses = () => {
               <IconButton
                 size="small"
                 color="primary"
-                onClick={() => handleEditOpen(item)}>
+                onClick={() => handleEditOpen(item)}
+              >
                 <EditIcon fontSize="small" />
               </IconButton>
               <IconButton
                 size="small"
                 color="error"
-                onClick={() => handleDelete(item.id)}>
+                onClick={() => handleDelete(item.id)}
+              >
                 <DeleteIcon
                   fontSize="small"
                   sx={{ color: theme.palette.error.main }}
@@ -371,12 +378,14 @@ const Expenses = () => {
         justifyContent="center"
         alignItems="center"
         mt={4}
-        mb={4}>
+        mb={4}
+      >
         <ActionButton
           variant="outlined"
           color={page > 1 ? "success" : "inherit"}
           onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}>
+          disabled={page === 1}
+        >
           Anterior
         </ActionButton>
         <Typography fontWeight={700}>{page}</Typography>
@@ -384,19 +393,22 @@ const Expenses = () => {
           variant="outlined"
           color={page < totalPages ? "success" : "inherit"}
           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}>
+          disabled={page === totalPages}
+        >
           Próxima
         </ActionButton>
-    </Stack>
+      </Stack>
       <Snackbar
         open={openSuccess}
         autoHideDuration={4000}
         onClose={handleCloseSuccess}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseSuccess}
           severity="success"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {success}
         </Alert>
       </Snackbar>
@@ -404,11 +416,13 @@ const Expenses = () => {
         open={openError}
         autoHideDuration={4000}
         onClose={handleCloseError}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseError}
           severity="error"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {error}
         </Alert>
       </Snackbar>

@@ -70,7 +70,8 @@ function App() {
                 <PrivateRoute>
                   <MainLayout />
                 </PrivateRoute>
-              }>
+              }
+            >
               <Route index element={<Home />} />
               <Route path="/receitas" element={<Revenues />} />
               <Route path="/despesas" element={<Expenses />} />

@@ -45,7 +45,8 @@ function DataTable<T>({
             {headers.map((header) => (
               <TableCell
                 key={String(header.key)}
-                align={header.align || "left"}>
+                align={header.align || "left"}
+              >
                 {header.label}
               </TableCell>
             ))}
@@ -60,7 +61,8 @@ function DataTable<T>({
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                  minHeight={200}>
+                  minHeight={200}
+                >
                   <CircularProgress />
                 </Box>
               </TableCell>
@@ -77,7 +79,8 @@ function DataTable<T>({
                 {headers.map((header) => (
                   <TableCell
                     key={String(header.key)}
-                    align={header.align || "left"}>
+                    align={header.align || "left"}
+                  >
                     {renderCell
                       ? renderCell(item, header.key)
                       : (item[header.key] as React.ReactNode)}

@@ -71,7 +71,8 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
       open={open}
       onClose={onClose}
       fullWidth
-      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
+      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}
+    >
       <DialogTitle
         sx={{
           fontWeight: 600,
@@ -82,7 +83,8 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         Simulação
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
@@ -116,7 +118,8 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
               type="button"
               variant="contained"
               onClick={handleSimulation}
-              sx={{ borderRadius: 999, fontWeight: 600, fontSize: 14 }}>
+              sx={{ borderRadius: 999, fontWeight: 600, fontSize: 14 }}
+            >
               Simular
             </ActionButton>
           </DialogActions>
@@ -127,7 +130,8 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
           mb={3}
           display={"flex"}
           justifyContent={"center"}
-          flexDirection={"column"}>
+          flexDirection={"column"}
+        >
           {isLoadingSimulation ? (
             <CircularProgress size={24} />
           ) : (
@@ -150,7 +154,8 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
                         vertical: "bottom",
                         horizontal: "left",
                       }}
-                      style={{ width: "80%" }}>
+                      style={{ width: "80%" }}
+                    >
                       <Typography sx={{ p: 1, fontSize: 12 }}>
                         Os valores apresentados consideram a média de rendimento
                         com base em 100% do CDI (para o CDB) e as taxas atuais

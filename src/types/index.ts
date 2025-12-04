@@ -44,7 +44,7 @@ export interface ApiRevenue {
 
 export interface Revenue {
   id: number;
-  status: 'Received' | 'Pending' | 'Overdue';
+  status: "Received" | "Pending" | "Overdue";
   description: string;
   dueDate: string;
   value: number;
@@ -73,7 +73,7 @@ export interface Expense {
 }
 
 export interface Saving {
-  id: number,
+  id: number;
   priority: number;
   description: string;
   accumulated: number;
@@ -102,7 +102,6 @@ export interface DoughnutChartType {
 }
 
 export interface TaxesTable {
-  name: string,
-  value: number,
+  name: string;
+  value: number;
 }
-

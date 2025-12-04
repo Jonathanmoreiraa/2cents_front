@@ -106,7 +106,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
       open={open}
       onClose={onClose}
       fullWidth
-      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
+      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}
+    >
       <DialogTitle
         sx={{
           fontWeight: 600,
@@ -117,7 +118,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         Cadastro de caixinha
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
@@ -130,7 +132,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
             display="flex"
             justifyContent="center"
             alignItems="center"
-            mt={2}>
+            mt={2}
+          >
             <Typography mr={2}>É uma reserva de emergência?</Typography>
             <Switch
               color="success"
@@ -152,7 +155,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
                     vertical: "bottom",
                     horizontal: "left",
                   }}
-                  style={{ width: "80%" }}>
+                  style={{ width: "80%" }}
+                >
                   <Typography sx={{ p: 1, fontSize: 12 }}>
                     Recomenda-se reservar pelo menos 10% das receitas recebidas
                   </Typography>
@@ -210,7 +214,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
               type="submit"
               variant="contained"
               color="success"
-              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 15 }}>
+              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 15 }}
+            >
               Cadastrar
             </ActionButton>
           </DialogActions>
@@ -221,7 +226,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
           mb={3}
           display={"flex"}
           justifyContent={"center"}
-          flexDirection={"column"}>
+          flexDirection={"column"}
+        >
           {cdb > 0 && poupanca > 0 && (
             <>
               <Typography mr={2}>
@@ -240,7 +246,8 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
                       vertical: "bottom",
                       horizontal: "left",
                     }}
-                    style={{ width: "80%" }}>
+                    style={{ width: "80%" }}
+                  >
                     <Typography sx={{ p: 1, fontSize: 12 }}>
                       Os valores apresentados consideram a média de rendimento
                       com base em 100% do CDI (para o CDB) e as taxas atuais do

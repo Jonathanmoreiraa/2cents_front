@@ -61,7 +61,8 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({
       open={open}
       onClose={onClose}
       fullWidth
-      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
+      PaperProps={{ sx: { borderRadius: 4, p: 0 } }}
+    >
       <DialogTitle
         sx={{
           fontWeight: 600,
@@ -72,7 +73,8 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         Cadastro de receitas
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
@@ -87,7 +89,8 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({
             sx={{
               flexDirection: { xs: "column", md: "row" },
               gap: { sm: 0, md: 2 },
-            }}>
+            }}
+          >
             <StyledTextField
               label="Valor (R$)"
               value={value}
@@ -130,7 +133,8 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({
               type="submit"
               variant="contained"
               color="success"
-              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}>
+              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}
+            >
               Cadastrar
             </ActionButton>
           </DialogActions>

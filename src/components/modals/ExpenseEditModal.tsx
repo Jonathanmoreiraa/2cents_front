@@ -51,15 +51,15 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
   const [value, setValue] = useState(initialValues.value.toString());
   const [description, setDescription] = useState(initialValues.description);
   const [dueDate, setDueDate] = useState<Date | null>(
-    new Date(initialValues.due_date)
+    new Date(initialValues.due_date),
   );
   const [paid, setPaid] = useState(initialValues.paid === 1);
   const [categoryId, setCategoryId] = useState(initialValues.category_id);
   const [categoryName, setCategoryName] = useState(
-    initialValues.category || ""
+    initialValues.category || "",
   );
   const [categories, setCategories] = useState<{ name: string; id: number }[]>(
-    []
+    [],
   );
 
   const getCategories = async () => {
@@ -69,22 +69,20 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
         res.data.map((cat: { name: string; id: number }) => ({
           name: cat.name,
           id: cat.id,
-        }))
+        })),
       );
     } catch {
       //onError(err);
     }
   };
 
-  const handleCategoryChange = async (
-    value: string | undefined
-  ) => {
+  const handleCategoryChange = async (value: string | undefined) => {
     if (!value) {
       return;
     }
 
     const selectedCategory = categories.find(
-      (cat) => cat.name.toLowerCase() === value.toLowerCase()
+      (cat) => cat.name.toLowerCase() === value.toLowerCase(),
     );
     if (selectedCategory) {
       setCategoryId(selectedCategory.id);
@@ -107,7 +105,7 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
     try {
       await api.delete(`/api/category/${id}`);
       setCategories((prevCategories) =>
-        prevCategories.filter((cat) => cat.id !== id)
+        prevCategories.filter((cat) => cat.id !== id),
       );
     } catch (err) {
       onError(err);
@@ -131,7 +129,7 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
     setValue(initialValues?.value?.toString() || "");
     setDescription(initialValues?.description || "");
     setDueDate(
-      initialValues?.due_date ? new Date(initialValues.due_date) : null
+      initialValues?.due_date ? new Date(initialValues.due_date) : null,
     );
     setPaid(initialValues?.paid === 1 ? true : false);
     setCategoryId(initialValues?.category_id || 0);
@@ -154,7 +152,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
           scrollbarWidth: "thin",
           scrollbarColor: theme.palette.primary.main + " #e6f2ec",
         },
-      }}>
+      }}
+    >
       <DialogTitle
         sx={{
           fontWeight: 600,
@@ -165,7 +164,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         Editar despesa
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
@@ -180,7 +180,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
             sx={{
               flexDirection: { xs: "column", md: "row" },
               gap: { sm: 0, md: 2 },
-            }}>
+            }}
+          >
             <StyledTextField
               label="Valor (R$)"
               value={value}
@@ -222,8 +223,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
               categories.find((cat) => cat.id === categoryId)
                 ? categories.find((cat) => cat.id === categoryId)
                 : categoryName === "Caixinha"
-                ? { name: categoryName, id: 0 }
-                : null
+                  ? { name: categoryName, id: 0 }
+                  : null
             }
             getOptionDisabled={(option) => option.name === "Caixinha"}
             slotProps={{
@@ -257,7 +258,7 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
                     event.preventDefault();
                     event.stopPropagation();
                     handleCategoryChange(
-                      params.inputProps.value as string | undefined
+                      params.inputProps.value as string | undefined,
                     );
                   }
                 }}
@@ -277,7 +278,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}
-                  {...rest}>
+                  {...rest}
+                >
                   {option.name}
                   <IconButton
                     edge="end"
@@ -285,7 +287,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
                       event.preventDefault();
                       event.stopPropagation();
                       handleCategoryDelete(option.id);
-                    }}>
+                    }}
+                  >
                     <CancelIcon style={{ color: "#d4d4d4" }} />
                   </IconButton>
                 </li>
@@ -305,7 +308,8 @@ const ExpenseEditModal: React.FC<ExpenseEditModalProps> = ({
               type="submit"
               variant="contained"
               color="success"
-              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}>
+              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}
+            >
               Salvar
             </ActionButton>
           </DialogActions>

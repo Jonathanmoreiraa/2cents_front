@@ -1,36 +1,38 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: 'rgba(53, 129, 86, 1)',
-      light: 'rgba(53, 129, 86, 0.3)'
+      main: "rgba(53, 129, 86, 1)",
+      light: "rgba(53, 129, 86, 0.3)",
+      contrastText: "rgba(230, 242, 236, 1)",
+      dark: "rgba(44, 107, 71, 1)",
     },
     secondary: {
-      main: 'rgba(105, 166, 131, 1)',
+      main: "rgba(105, 166, 131, 1)",
     },
     warning: {
-      main: 'rgba(176, 167, 72, 1)'
+      main: "rgba(176, 167, 72, 1)",
     },
     info: {
-      main: 'rgba(153, 153, 153, 1)'
+      main: "rgba(153, 153, 153, 1)",
     },
     error: {
-      main: 'rgba(245, 118, 101, 1)',
+      main: "rgba(245, 118, 101, 1)",
     },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontSize: '2.5rem',
+      fontSize: "2.5rem",
       fontWeight: 500,
     },
     h2: {
-      fontSize: '2rem',
+      fontSize: "2rem",
       fontWeight: 500,
     },
     h3: {
-      fontSize: '1.75rem',
+      fontSize: "1.75rem",
       fontWeight: 500,
     },
   },
@@ -38,7 +40,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          textTransform: "none",
         },
       },
     },
@@ -57,4 +59,4 @@ const theme = createTheme({
   },
 });
 
-export default theme; 
+export default theme;

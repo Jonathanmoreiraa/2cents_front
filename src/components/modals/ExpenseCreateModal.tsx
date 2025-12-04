@@ -49,7 +49,7 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
   const [category, setCategory] = useState("");
   const [categoryId, setCategoryId] = useState(0);
   const [categories, setCategories] = useState<{ name: string; id: number }[]>(
-    []
+    [],
   );
   const [multiplePayments, setMultiplePayments] = useState(false);
   const [installments, setInstallments] = useState<number | undefined>();
@@ -62,16 +62,14 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
         res.data.map((cat: { name: string; id: number }) => ({
           name: cat.name,
           id: cat.id,
-        }))
+        })),
       );
     } catch {
       //onError(err);
     }
   };
 
-  const handleCategoryChange = async (
-    value: string | undefined
-  ) => {
+  const handleCategoryChange = async (value: string | undefined) => {
     if (!value) {
       return;
     }
@@ -100,7 +98,7 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
     try {
       await api.delete(`/api/category/${id}`);
       setCategories((prevCategories) =>
-        prevCategories.filter((cat) => cat.id !== id)
+        prevCategories.filter((cat) => cat.id !== id),
       );
     } catch (err) {
       onError(err);
@@ -150,7 +148,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
           scrollbarWidth: "thin",
           scrollbarColor: theme.palette.primary.main + " #e6f2ec",
         },
-      }}>
+      }}
+    >
       <DialogTitle
         sx={{
           fontWeight: 600,
@@ -161,7 +160,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         Cadastro de despesa
         <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Fechar modal">
           <CloseIcon />
@@ -176,7 +176,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
             sx={{
               flexDirection: { xs: "column", md: "row" },
               gap: { sm: 0, md: 2 },
-            }}>
+            }}
+          >
             <StyledTextField
               label="Valor (R$)"
               value={value}
@@ -244,7 +245,7 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                     event.preventDefault();
                     event.stopPropagation();
                     handleCategoryChange(
-                      params.inputProps.value as string | undefined
+                      params.inputProps.value as string | undefined,
                     );
                   }
                 }}
@@ -265,7 +266,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}
-                  {...rest}>
+                  {...rest}
+                >
                   {option.name}
                   <IconButton
                     edge="end"
@@ -273,7 +275,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                       event.preventDefault();
                       event.stopPropagation();
                       handleCategoryDelete(option.id);
-                    }}>
+                    }}
+                  >
                     <CancelIcon style={{ color: "#d4d4d4" }} />
                   </IconButton>
                 </li>
@@ -303,7 +306,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
               sx={{
                 flexDirection: { xs: "column", md: "row" },
                 gap: { sm: 0, md: 2 },
-              }}>
+              }}
+            >
               <StyledTextField
                 label="Nº de parcelas"
                 value={installments || ""}
@@ -327,7 +331,8 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
               type="submit"
               variant="contained"
               color="success"
-              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}>
+              sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}
+            >
               Cadastrar
             </ActionButton>
           </DialogActions>
