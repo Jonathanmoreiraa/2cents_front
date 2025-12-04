@@ -26,6 +26,7 @@ import { logout } from "../../store/slices/auth-slice";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import logo from "../../assets/logo_2cents_white.svg";
+import theme from "../../theme";
 // import { useMediaQuery } from '@mui/material';
 // import { OverlayNotification } from '../../layouts/MainLayout.styles';
 
@@ -148,13 +149,14 @@ const Sidebar: React.FC = () => {
         <Box
           sx={{
             width: "80%",
-            bgcolor: "#358156",
+            bgcolor: `${theme.palette.primary.main}`,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             marginTop: "-16px",
-          }}>
+          }}
+        >
           <img
             src={logo}
             alt="Logo Planejja"
@@ -169,12 +171,14 @@ const Sidebar: React.FC = () => {
           onClick={() => {
             setFinancasOpen(false);
             navigate("/");
-          }}>
+          }}
+        >
           <FaChartBar style={{ marginRight: 16 }} /> Dashboard
         </MenuItem>
         <MenuItem
           selected={selected === "/receitas" || selected === "/despesas"}
-          onClick={() => setFinancasOpen(!financasOpen)}>
+          onClick={() => setFinancasOpen(!financasOpen)}
+        >
           <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças{" "}
           <FaChevronDown
             style={{
@@ -188,12 +192,14 @@ const Sidebar: React.FC = () => {
           <SubMenu>
             <SubMenuItem
               selected={selected === "/receitas"}
-              onClick={() => navigate("/receitas")}>
+              onClick={() => navigate("/receitas")}
+            >
               Receitas
             </SubMenuItem>
             <SubMenuItem
               selected={selected === "/despesas"}
-              onClick={() => navigate("/despesas")}>
+              onClick={() => navigate("/despesas")}
+            >
               Despesas
             </SubMenuItem>
           </SubMenu>
@@ -203,7 +209,8 @@ const Sidebar: React.FC = () => {
           onClick={() => {
             navigate("/caixinhas");
             setFinancasOpen(false);
-          }}>
+          }}
+        >
           <FaWallet style={{ marginRight: 16 }} /> Caixinhas
         </MenuItem>
         <MenuItem
@@ -211,7 +218,8 @@ const Sidebar: React.FC = () => {
           onClick={() => {
             setFinancasOpen(false);
             navigate("/configuracoes");
-          }}>
+          }}
+        >
           <FaCog style={{ marginRight: 16 }} /> Configurações
         </MenuItem>
       </Menu>

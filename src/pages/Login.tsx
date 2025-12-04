@@ -34,7 +34,7 @@ const Login: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, token } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const theme = useTheme();
@@ -55,7 +55,7 @@ const Login: React.FC = () => {
 
   const handleCloseSnackbar = (
     _: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === "clickaway") {
       return;
@@ -104,7 +104,8 @@ const Login: React.FC = () => {
         minHeight: "100vh",
         minWidth: "100vw",
         flexDirection: isMobile ? "column" : "row",
-      }}>
+      }}
+    >
       {isMobile && (
         <Box
           sx={{
@@ -116,7 +117,8 @@ const Login: React.FC = () => {
             justifyContent: "center",
             alignItems: "center",
             p: 4,
-          }}>
+          }}
+        >
           <img src={logo} alt="Logo 2Cents" style={{ height: "auto" }} />
         </Box>
       )}
@@ -128,13 +130,15 @@ const Login: React.FC = () => {
           alignItems: "center",
           justifyContent: "center",
           p: 4,
-        }}>
+        }}
+      >
         <Box
           sx={{
             width: isMobile ? "100%" : "70%",
             p: 4,
             borderRadius: 2,
-          }}>
+          }}
+        >
           <form onSubmit={handleSubmit}>
             <TextField
               placeholder="Email"
@@ -149,7 +153,9 @@ const Login: React.FC = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <EmailIcon sx={{ color: "#358156" }} />
+                    <EmailIcon
+                      sx={{ color: `${theme.palette.primary.main}` }}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -169,7 +175,7 @@ const Login: React.FC = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LockIcon sx={{ color: "#358156" }} />
+                    <LockIcon sx={{ color: `${theme.palette.primary.main}` }} />
                   </InputAdornment>
                 ),
               }}
@@ -182,14 +188,15 @@ const Login: React.FC = () => {
               fullWidth
               disabled={loading}
               sx={{
-                bgcolor: "#358156",
+                bgcolor: `${theme.palette.primary.main}`,
                 color: "white",
                 borderRadius: "50px",
                 textTransform: "none",
                 mt: 3,
                 mb: 2,
-                "&:hover": { bgcolor: "#2c6b47" },
-              }}>
+                "&:hover": { bgcolor: `${theme.palette.primary.dark}` },
+              }}
+            >
               {loading ? <CircularProgress size={24} /> : "Entrar"}
             </Button>
 
@@ -199,10 +206,11 @@ const Login: React.FC = () => {
                 component={RouterLink}
                 to="/registro"
                 sx={{
-                  color: "#358156",
+                  color: `${theme.palette.primary.main}`,
                   textDecoration: "none",
                   "&:hover": { textDecoration: "underline" },
-                }}>
+                }}
+              >
                 Registre-se
               </Link>
             </Typography>
@@ -214,13 +222,14 @@ const Login: React.FC = () => {
         <Box
           sx={{
             width: "40%",
-            bgcolor: "#358156",
+            bgcolor: `${theme.palette.primary.main}`,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             p: 4,
-          }}>
+          }}
+        >
           <img
             src={logo}
             alt="Logo Planejja"
@@ -233,7 +242,8 @@ const Login: React.FC = () => {
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseSnackbar}
           severity="error"
@@ -243,10 +253,12 @@ const Login: React.FC = () => {
               size="small"
               aria-label="close"
               color="inherit"
-              onClick={handleCloseSnackbar}>
+              onClick={handleCloseSnackbar}
+            >
               <CloseIcon fontSize="small" />
             </IconButton>
-          }>
+          }
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>

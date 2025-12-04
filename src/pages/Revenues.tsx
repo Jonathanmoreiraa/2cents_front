@@ -71,7 +71,7 @@ const Revenues: React.FC = () => {
   const totalPages = Math.max(1, Math.ceil(revenues.length / ITEMS_PER_PAGE));
   const paginated = revenues.slice(
     (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
+    page * ITEMS_PER_PAGE,
   );
 
   const handleOpenAddModal = () => setModalAddOpen(true);
@@ -153,7 +153,10 @@ const Revenues: React.FC = () => {
 
   const handleFilter = async (values?: FilterValues) => {
     try {
-      const res = await api.post("/api/revenue/filter", values ?? defaultFilterValues);
+      const res = await api.post(
+        "/api/revenue/filter",
+        values ?? defaultFilterValues,
+      );
       setRevenues(formatRevenues(res.data));
       setLoading(false);
       setDefaultFilterValues(values ?? defaultFilterValues);
@@ -187,23 +190,26 @@ const Revenues: React.FC = () => {
         background: "#fff",
         overflow: "auto",
         scrollbarWidth: "thin",
-        scrollbarColor: "#358156 #e6f2ec",
+        scrollbarColor: `${theme.palette.primary.main} ${theme.palette.primary.contrastText}`,
         "@media (max-width: 900px)": {
           p: 2,
           pb: 4,
         },
-      }}>
+      }}
+    >
       <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        mb={3}>
+        mb={3}
+      >
         <Stack direction="row" spacing={2}>
           <ActionButton
             variant="outlined"
             color="success"
             endIcon={<FilterListIcon />}
-            onClick={() => setFilterOpen(true)}>
+            onClick={() => setFilterOpen(true)}
+          >
             Filtrar
           </ActionButton>
         </Stack>
@@ -211,7 +217,8 @@ const Revenues: React.FC = () => {
           <ActionButton
             onClick={handleOpenAddModal}
             variant="outlined"
-            color="success">
+            color="success"
+          >
             Cadastrar
           </ActionButton>
         </Stack>
@@ -261,13 +268,15 @@ const Revenues: React.FC = () => {
               <IconButton
                 size="small"
                 color="primary"
-                onClick={() => handleOpenEditModal(item)}>
+                onClick={() => handleOpenEditModal(item)}
+              >
                 <EditIcon fontSize="small" />
               </IconButton>
               <IconButton
                 size="small"
                 color="error"
-                onClick={() => handleDelete(item.id)}>
+                onClick={() => handleDelete(item.id)}
+              >
                 <DeleteIcon
                   fontSize="small"
                   sx={{ color: theme.palette.error.main }}
@@ -321,12 +330,14 @@ const Revenues: React.FC = () => {
         justifyContent="center"
         alignItems="center"
         mt={4}
-        mb={4}>
+        mb={4}
+      >
         <ActionButton
           variant="outlined"
           color={page > 1 ? "success" : "inherit"}
           onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}>
+          disabled={page === 1}
+        >
           Anterior
         </ActionButton>
         <Typography fontWeight={700}>{page}</Typography>
@@ -334,7 +345,8 @@ const Revenues: React.FC = () => {
           variant="outlined"
           color={page < totalPages ? "success" : "inherit"}
           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}>
+          disabled={page === totalPages}
+        >
           Próxima
         </ActionButton>
       </Stack>
@@ -342,11 +354,13 @@ const Revenues: React.FC = () => {
         open={openSuccess}
         autoHideDuration={4000}
         onClose={handleCloseSuccess}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseSuccess}
           severity="success"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {success}
         </Alert>
       </Snackbar>
@@ -354,11 +368,13 @@ const Revenues: React.FC = () => {
         open={openError}
         autoHideDuration={4000}
         onClose={handleCloseError}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseError}
           severity="error"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {error}
         </Alert>
       </Snackbar>

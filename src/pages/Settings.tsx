@@ -11,6 +11,8 @@ import ActionButton from "../components/common/ActionButton";
 import DateFieldInput from "../components/common/DateFieldInput";
 import authService from "../services/auth-service";
 import api from "../services/api";
+import theme from "../theme";
+import { useNavigate } from "react-router-dom";
 
 const Settings: React.FC = () => {
   const [name, setName] = useState("");
@@ -23,6 +25,7 @@ const Settings: React.FC = () => {
   const [openSuccess, setOpenSuccess] = useState(false);
   const successMessage = "Usuário editado com sucesso!";
   const handleCloseSuccess = () => setOpenSuccess(false);
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     try {
@@ -33,6 +36,7 @@ const Settings: React.FC = () => {
       });
       if (userUpdated) {
         setOpenSuccess(true);
+        navigate("/");
       }
     } catch (error) {
       handleError(error);
@@ -78,24 +82,29 @@ const Settings: React.FC = () => {
         background: "#fff",
         overflow: "auto",
         scrollbarWidth: "thin",
-        scrollbarColor: "#358156 #e6f2ec",
+        scrollbarColor: `${theme.palette.primary.main} ${theme.palette.primary.contrastText}`,
         "@media (max-width: 900px)": {
           p: 2,
           pb: 4,
         },
-      }}>
+      }}
+    >
       <Box sx={{ maxWidth: 600, mx: "auto", textAlign: "center" }}>
         <Typography
           variant="h6"
           component="h3"
           gutterBottom
-          sx={{ mb: 4, fontWeight: 600, color: "#358156" }}>
+          sx={{
+            mb: 4,
+            fontWeight: 600,
+            color: `${theme.palette.primary.main}`,
+          }}
+        >
           Configurações do Usuário
         </Typography>
 
         {/* Formulário de Edição */}
         <Stack spacing={3}>
-          {/* 1 - Nome */}
           <TextField
             fullWidth
             label="Nome*"
@@ -106,7 +115,6 @@ const Settings: React.FC = () => {
             size="medium"
           />
 
-          {/* 2 - Email */}
           <TextField
             fullWidth
             label="Email*"
@@ -118,7 +126,6 @@ const Settings: React.FC = () => {
             size="medium"
           />
 
-          {/* 3 - Data de Nascimento */}
           <DateFieldInput
             label="Data de Nascimento"
             value={birthDate}
@@ -131,14 +138,14 @@ const Settings: React.FC = () => {
             }}
           />
 
-          {/* Botão de Salvar */}
           <Box>
             <ActionButton
               type="submit"
               variant="contained"
               color="success"
               sx={{ px: 8, borderRadius: 999, fontWeight: 600, fontSize: 15 }}
-              onClick={handleSave}>
+              onClick={handleSave}
+            >
               Salvar
             </ActionButton>
           </Box>
@@ -148,11 +155,13 @@ const Settings: React.FC = () => {
           open={openError}
           autoHideDuration={4000}
           onClose={handleCloseError}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
           <Alert
             onClose={handleCloseError}
             severity="error"
-            sx={{ width: "100%" }}>
+            sx={{ width: "100%" }}
+          >
             {error}
           </Alert>
         </Snackbar>
@@ -161,11 +170,13 @@ const Settings: React.FC = () => {
           open={openSuccess}
           autoHideDuration={4000}
           onClose={handleCloseSuccess}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
           <Alert
             onClose={handleCloseSuccess}
             severity="success"
-            sx={{ width: "100%" }}>
+            sx={{ width: "100%" }}
+          >
             {successMessage}
           </Alert>
         </Snackbar>

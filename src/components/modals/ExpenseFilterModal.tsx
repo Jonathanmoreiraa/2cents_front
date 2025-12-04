@@ -53,7 +53,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
 }) => {
   const [values, setValues] = useState<FilterValues>({ ...initialValues });
   const [categories, setCategories] = useState<{ name: string; id: number }[]>(
-    []
+    [],
   );
 
   const getCategories = async () => {
@@ -63,7 +63,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
         res.data.map((cat: { name: string; id: number }) => ({
           name: cat.name,
           id: cat.id,
-        }))
+        })),
       );
     } catch {
       // onError(err);
@@ -80,7 +80,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
 
   const handleChange = (
     field: keyof FilterValues,
-    value: string | Date | null | number | { name: string; id: number }[]
+    value: string | Date | null | number | { name: string; id: number }[],
   ) => {
     setValues((prev) => ({ ...prev, [field]: value }));
   };
@@ -102,7 +102,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
     try {
       await api.delete(`/api/category/${id}`);
       setCategories((prevCategories) =>
-        prevCategories.filter((cat) => cat.id !== id)
+        prevCategories.filter((cat) => cat.id !== id),
       );
     } catch (err) {
       onError(err);
@@ -137,13 +137,15 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
         },
       }}
       aria-labelledby="filter-dialog-title"
-      aria-describedby="filter-dialog-description">
+      aria-describedby="filter-dialog-description"
+    >
       <DialogTitle id="filter-dialog-title" sx={{ fontSize: 28, pb: 0 }}>
         Filtrar despesas
         <IconButton
           onClick={onClose}
           sx={{ position: "absolute", right: 16, top: 16 }}
-          aria-label="Fechar modal">
+          aria-label="Fechar modal"
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -151,8 +153,9 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
         sx={{
           pt: 2,
           scrollbarWidth: "thin",
-          scrollbarColor: "#358156 #e6f2ec",
-        }}>
+          scrollbarColor: `${theme.palette.primary.main} ${theme.palette.primary.contrastText}`,
+        }}
+      >
         <Box component="form" onSubmit={handleSubmit}>
           <StyledTextField
             label="Descrição"
@@ -167,7 +170,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
             display="flex"
             justifyContent="space-between"
             mb={values.date_start || values.date_end ? 0 : 2}
-            sx={{ flexDirection: { xs: "column", md: "row" } }}>
+            sx={{ flexDirection: { xs: "column", md: "row" } }}
+          >
             <DateFieldInput
               label="Data inicial"
               value={values.date_start || undefined}
@@ -189,7 +193,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
               sx={{
                 flexDirection: { xs: "column", md: "row" },
                 mt: { xs: 2, md: 0 },
-              }}>
+              }}
+            >
               <Button
                 onClick={handleClearDates}
                 variant="outlined"
@@ -198,7 +203,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                   fontSize: 10,
                   fontWeight: 600,
                   borderRadius: 999,
-                }}>
+                }}
+              >
                 Limpar Datas
               </Button>
             </Box>
@@ -235,7 +241,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}
-                  {...rest}>
+                  {...rest}
+                >
                   {option.name}
                   <IconButton
                     edge="end"
@@ -243,7 +250,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                       event.preventDefault();
                       event.stopPropagation();
                       handleCategoryDelete(option.id);
-                    }}>
+                    }}
+                  >
                     <CancelIcon style={{ color: "#d4d4d4" }} />
                   </IconButton>
                 </li>
@@ -258,7 +266,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                 onChange={(e) =>
                   handleChange(
                     "min",
-                    parseFloat(e.target.value) > 0 ? e.target.value : 0
+                    parseFloat(e.target.value) > 0 ? e.target.value : 0,
                   )
                 }
                 fullWidth
@@ -271,7 +279,7 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                 onChange={(e) =>
                   handleChange(
                     "max",
-                    parseFloat(e.target.value) > 0 ? e.target.value : 0
+                    parseFloat(e.target.value) > 0 ? e.target.value : 0,
                   )
                 }
                 placeholder="0,00"
@@ -290,7 +298,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
             </Typography>
             <FormGroup
               row
-              sx={{ justifyContent: "flex-start", flexDirection: "column" }}>
+              sx={{ justifyContent: "flex-start", flexDirection: "column" }}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
@@ -343,7 +352,8 @@ const ExpenseFilterModal: React.FC<ExpenseFilterModalProps> = ({
                 fontWeight: 600,
                 fontSize: 18,
                 backgroundColor: theme.palette.primary.main,
-              }}>
+              }}
+            >
               Filtrar
             </Button>
           </DialogActions>

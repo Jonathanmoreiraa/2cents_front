@@ -24,7 +24,7 @@ function GenericCardList<T extends { id?: number | string }>({
 }: GenericCardListProps<T>) {
   if (!items.length) {
     return (
-      <EmptyStateBox>
+      <EmptyStateBox bgcolor="lightgray" borderRadius={5}>
         <Typography variant="h6" color="text.secondary">
           {emptyMessage}
         </Typography>

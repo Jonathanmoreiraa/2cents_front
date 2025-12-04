@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
-import { Box, Container, Grid, Typography, Paper } from "@mui/material";
+import { Box, Container, Grid, Typography, Paper, useMediaQuery } from "@mui/material";
 import { StyledGrid } from "../components/common/common-components.styles";
 import { BarChartDataType, DoughnutChartType, TaxesTable } from "../types";
 import { formatToMoney } from "../utils/format-money";
@@ -30,7 +30,7 @@ Chart.register(
   Legend,
   ArcElement,
   LineElement,
-  PointElement
+  PointElement,
 );
 
 const Home: React.FC = () => {
@@ -48,6 +48,7 @@ const Home: React.FC = () => {
     "Novembro",
     "Dezembro",
   ];
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   // Bar Chart
   const defaultChart = { labels: [], datasets: [] };
@@ -135,21 +136,21 @@ const Home: React.FC = () => {
         new Set([
           ...revenues.map((r: { month: string; total: number }) => r.month),
           ...expenses.map((d: { month: string; total: number }) => d.month),
-        ])
+        ]),
       ).sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
 
       const receitaMap = Object.fromEntries(
         revenues.map((r: { month: string; total: number }) => [
           r.month,
           r.total,
-        ])
+        ]),
       );
 
       const despesaMap = Object.fromEntries(
         expenses.map((d: { month: string; total: number }) => [
           d.month,
           d.total,
-        ])
+        ]),
       );
 
       const receitaData = allMonths.map((month) => receitaMap[month] ?? 0);
@@ -198,21 +199,21 @@ const Home: React.FC = () => {
       switch (true) {
         case resultPercentage <= 55:
           setSituationMessage(
-            "Parabéns! Seu planejamento financeiro está funcionando muito bem."
+            "Parabéns! Seu planejamento financeiro está funcionando muito bem.",
           );
           setSituationColor(theme.palette.primary.main);
           break;
 
         case resultPercentage <= 85:
           setSituationMessage(
-            "Você gastou acima do recomendado, mas ainda está no controle. Atente-se!"
+            "Você gastou acima do recomendado, mas ainda está no controle. Atente-se!",
           );
           setSituationColor(theme.palette.warning.main);
           break;
 
         default:
           setSituationMessage(
-            "Este mês seus gastos foram muito altos. Ajustes são recomendados para evitar problemas financeiros."
+            "Este mês seus gastos foram muito altos. Ajustes são recomendados para evitar problemas financeiros.",
           );
           setSituationColor(theme.palette.error.main);
       }
@@ -236,7 +237,7 @@ const Home: React.FC = () => {
       const labels: string[] = [];
       const data: number[] = [];
       const colors: string[] = categories.map((_: unknown, index: number) =>
-        generateRandomColor(index)
+        generateRandomColor(index),
       );
 
       categories.map((cat: { category: number; name: string }) => {
@@ -315,7 +316,8 @@ const Home: React.FC = () => {
         <StyledGrid>
           <Paper
             elevation={3}
-            sx={{ p: 2, height: "100%", textAlign: "center", width: "21rem" }}>
+            sx={{ p: 2, height: "100%", textAlign: "center", width: isMobile ? "100%" : "21rem" }}
+          >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
               Situação mensal
             </Typography>
@@ -326,7 +328,8 @@ const Home: React.FC = () => {
                 width: 200,
                 height: 200,
                 mx: "auto",
-              }}>
+              }}
+            >
               <Doughnut data={situationDataset} options={doughnutOptions} />
 
               <Box
@@ -340,16 +343,19 @@ const Home: React.FC = () => {
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <Typography
                   variant="h4"
                   fontWeight="bold"
-                  color={situationColor}>
+                  color={situationColor}
+                >
                   {percentage}%
                 </Typography>
                 <Typography
                   variant="caption"
-                  sx={{ fontSize: 10, width: "70%" }}>
+                  sx={{ fontSize: 10, width: "70%" }}
+                >
                   {situationMessage}
                 </Typography>
               </Box>
@@ -360,7 +366,8 @@ const Home: React.FC = () => {
                 display="flex"
                 justifyContent="space-between"
                 width={200}
-                mb={1}>
+                mb={1}
+              >
                 <Box display="flex" alignItems="center">
                   <Box
                     sx={{
@@ -405,7 +412,8 @@ const Home: React.FC = () => {
         spacing={3}
         display="flex"
         justifyContent="space-between"
-        sx={{ mt: 4 }}>
+        sx={{ mt: 4 }}
+      >
         <StyledGrid>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
             <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
@@ -426,7 +434,8 @@ const Home: React.FC = () => {
             </Box>
 
             <Box
-              sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 3 }}>
+              sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 3 }}
+            >
               <Box display="flex" alignItems="center">
                 <Box
                   sx={{
@@ -456,7 +465,10 @@ const Home: React.FC = () => {
           </Paper>
         </StyledGrid>
         <StyledGrid>
-          <Paper elevation={3} sx={{ pr: 4, pl: 4, pt: 2, height: "100%" }}>
+          <Paper
+            elevation={3}
+            sx={{ pr: 4, pl: 4, pt: 2, pb: 4, height: "100%" }}
+          >
             <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
               Indicadores financeiros
             </Typography>

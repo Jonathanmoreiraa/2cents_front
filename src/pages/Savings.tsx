@@ -57,7 +57,7 @@ const Savings: React.FC = () => {
   const totalPages = Math.max(1, Math.ceil(savings.length / ITEMS_PER_PAGE));
   const paginated = savings.slice(
     (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
+    page * ITEMS_PER_PAGE,
   );
 
   const handleOpenAddModal = () => setModalAddOpen(true);
@@ -152,23 +152,26 @@ const Savings: React.FC = () => {
         background: "#fff",
         overflow: "auto",
         scrollbarWidth: "thin",
-        scrollbarColor: "#358156 #e6f2ec",
+        scrollbarColor: `${theme.palette.primary.main} ${theme.palette.primary.contrastText}`,
         "@media (max-width: 900px)": {
           p: 2,
           pb: 4,
         },
-      }}>
+      }}
+    >
       <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        mb={3}>
+        mb={3}
+      >
         <Stack direction="row" spacing={2}>
           <ActionButton
             variant="outlined"
             color="success"
             onClick={handleOpenSimulationModal}
-            endIcon={<WalletIcon />}>
+            endIcon={<WalletIcon />}
+          >
             Simulação
           </ActionButton>
         </Stack>
@@ -176,7 +179,8 @@ const Savings: React.FC = () => {
           <ActionButton
             variant="outlined"
             color="success"
-            onClick={handleOpenAddModal}>
+            onClick={handleOpenAddModal}
+          >
             Cadastrar
           </ActionButton>
         </Stack>
@@ -217,13 +221,15 @@ const Savings: React.FC = () => {
               <IconButton
                 size="small"
                 color="primary"
-                onClick={() => handleOpenEditModal(item)}>
+                onClick={() => handleOpenEditModal(item)}
+              >
                 <EditIcon fontSize="small" />
               </IconButton>
               <IconButton
                 size="small"
                 color="error"
-                onClick={() => handleDelete(item.id)}>
+                onClick={() => handleDelete(item.id)}
+              >
                 <DeleteIcon
                   fontSize="small"
                   sx={{ color: theme.palette.error.main }}
@@ -269,12 +275,14 @@ const Savings: React.FC = () => {
         justifyContent="center"
         alignItems="center"
         mt={4}
-        mb={4}>
+        mb={4}
+      >
         <ActionButton
           variant="outlined"
           color={page > 1 ? "success" : "inherit"}
           onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}>
+          disabled={page === 1}
+        >
           Anterior
         </ActionButton>
         <Typography fontWeight={700}>{page}</Typography>
@@ -282,7 +290,8 @@ const Savings: React.FC = () => {
           variant="outlined"
           color={page < totalPages ? "success" : "inherit"}
           onClick={() => setPage((p) => Math.min(1000, p + 1))}
-          disabled={page === totalPages}>
+          disabled={page === totalPages}
+        >
           Próxima
         </ActionButton>
       </Stack>
@@ -290,11 +299,13 @@ const Savings: React.FC = () => {
         open={openSuccess}
         autoHideDuration={4000}
         onClose={handleCloseSuccess}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseSuccess}
           severity="success"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {success}
         </Alert>
       </Snackbar>
@@ -302,11 +313,13 @@ const Savings: React.FC = () => {
         open={openError}
         autoHideDuration={4000}
         onClose={handleCloseError}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Alert
           onClose={handleCloseError}
           severity="error"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           {error}
         </Alert>
       </Snackbar>

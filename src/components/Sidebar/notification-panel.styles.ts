@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import theme from '../../theme';
+import styled from "styled-components";
+import theme from "../../theme";
 
 export const Panel = styled.div`
   position: absolute;
@@ -58,15 +58,17 @@ export const NotificationItem = styled.div<{ expanded?: boolean }>`
   position: relative;
   padding: 16px 24px 8px 24px;
   border-bottom: 1px solid #ccc;
-  background: ${({ expanded }) => (expanded ? '#f6faf7' : 'transparent')};
+  background: ${({ expanded }) => (expanded ? "#f6faf7" : "transparent")};
   transition: background 0.2s;
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 export const UnreadDot = styled.div`
   width: 10px;
   height: 10px;
-  background: #FF5A5F;
+  background: ${theme.palette.error.main};
   border-radius: 50%;
   z-index: 2;
 `;
@@ -119,4 +121,4 @@ export const More = styled.div`
   margin-top: 8px;
   cursor: pointer;
   font-weight: 500;
-`; 
+`;

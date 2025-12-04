@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import theme from '../../theme';
+import styled from "styled-components";
+import theme from "../../theme";
 
 export const SidebarContainer = styled.div`
   width: 260px;
@@ -39,7 +39,7 @@ export const NotificationDot = styled.div`
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #FF5A5F;
+  background: ${theme.palette.error.main};
   color: #fff;
   border-radius: 50%;
   width: 18px;
@@ -65,14 +65,20 @@ export const MenuItem = styled.li<{ selected?: boolean }>`
   align-items: center;
   padding: 18px 32px;
   cursor: pointer;
-  background: ${({ selected }) => (selected ? '#fff' : 'transparent')};
-  color: ${({ selected }) => (selected ? theme.palette.primary.main : '#fff')};
+  background: ${({ selected }) => (selected ? "#fff" : "transparent")};
+  color: ${({ selected }) => (selected ? theme.palette.primary.main : "#fff")};
   font-weight: 700;
   font-size: 19px;
-  border-left: ${({ selected }) => (selected ? '4px solid ' + theme.palette.primary.main : '4px solid transparent')};
-  transition: background 0.2s, color 0.2s;
+  border-left: ${({ selected }) =>
+    selected
+      ? "4px solid " + theme.palette.primary.main
+      : "4px solid transparent"};
+  transition:
+    background 0.2s,
+    color 0.2s;
   &:hover {
-    background: ${({ selected }) => (selected ? '#fff' : 'rgba(255,255,255,0.08)')};
+    background: ${({ selected }) =>
+      selected ? "#fff" : "rgba(255,255,255,0.08)"};
   }
 `;
 
@@ -88,7 +94,7 @@ export const SubMenuItem = styled.li<{ selected?: boolean }>`
   color: ${theme.palette.primary.main};
   font-weight: 700;
   font-size: 18px;
-  background: ${({ selected }) => (selected ? '#e6f2ec' : '#fff')};
+  background: ${({ selected }) => (selected ? "#e6f2ec" : "#fff")};
   cursor: pointer;
   border-left: 4px solid transparent;
   &:hover {
@@ -110,7 +116,7 @@ export const ExitItem = styled(MenuItem)`
   font-size: 1.25rem;
   border-left: 4px solid transparent;
   &:hover {
-    background: rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.08);
     color: #fff;
   }
-`; 
+`;

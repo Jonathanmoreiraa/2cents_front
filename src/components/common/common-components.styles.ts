@@ -1,8 +1,15 @@
-import { styled } from '@mui/material/styles';
-import { Button, TextField, Box, Typography, DialogContent, Grid } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import InfoIcon from '@mui/icons-material/InfoOutlined';
-import theme from '../../theme';
+import { styled } from "@mui/material/styles";
+import {
+  Button,
+  TextField,
+  Box,
+  Typography,
+  DialogContent,
+  Grid,
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
+import theme from "../../theme";
 
 export const StyledActionButton = styled(Button)`
   border-radius: 25px;
@@ -151,7 +158,7 @@ export const DateFieldWrapper = styled(DatePicker)`
       border-color: ${theme.palette.grey[400]};
     }
 
-    &.Mui-focused fieldset {
+    & .Mui-focused fieldset {
       border-color: ${theme.palette.primary.main} !important;
     }
   }
@@ -159,7 +166,7 @@ export const DateFieldWrapper = styled(DatePicker)`
   & .MuiInputLabel-root {
     color: ${theme.palette.grey[600]};
 
-    &.Mui-focused {
+    & .Mui-focused {
       color: ${theme.palette.primary.main} !important;
     }
   }
@@ -168,17 +175,16 @@ export const DateFieldWrapper = styled(DatePicker)`
     padding: 12px 14px;
   }
 
-  & .MuiSvgIcon-root {
-    color: ${theme.palette.grey[500]};
-  }
-
   & .MuiOutlinedInput-root.Mui-focused .MuiSvgIcon-root {
     color: ${theme.palette.primary.main} !important;
   }
 
-  & .Mui-focused:not(.Mui-error)
-    .MuiPickersOutlinedInput-notchedOutline {
-    border-color: #2e6846 !important;
+  & .Mui-focused:not(.Mui-error) .MuiPickersOutlinedInput-notchedOutline {
+    border-color: ${theme.palette.primary.main} !important;
+  }
+
+  & .MuiSvgIcon-root {
+    color: ${theme.palette.primary.main};
   }
 `;
 

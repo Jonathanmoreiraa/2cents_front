@@ -59,7 +59,7 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
   //TODO: verificar se o valor é um número ou string
   const handleChange = (
     field: keyof FilterValues,
-    value: string | Date | null | number
+    value: string | Date | null | number,
   ) => {
     setValues((prev) => ({ ...prev, [field]: value }));
   };
@@ -97,13 +97,15 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
         },
       }}
       aria-labelledby="filter-dialog-title"
-      aria-describedby="filter-dialog-description">
+      aria-describedby="filter-dialog-description"
+    >
       <DialogTitle id="filter-dialog-title" sx={{ fontSize: 28, pb: 0 }}>
         Filtrar receitas
         <IconButton
           onClick={onClose}
           sx={{ position: "absolute", right: 16, top: 16 }}
-          aria-label="Fechar modal">
+          aria-label="Fechar modal"
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -111,8 +113,9 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
         sx={{
           pt: 2,
           scrollbarWidth: "thin",
-          scrollbarColor: "#358156 #e6f2ec",
-        }}>
+          scrollbarColor: `${theme.palette.primary.main} ${theme.palette.primary.contrastText}`,
+        }}
+      >
         <Box component="form" onSubmit={handleSubmit}>
           <StyledTextField
             label="Descrição"
@@ -127,7 +130,8 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
             display="flex"
             justifyContent="space-between"
             mb={2}
-            sx={{ flexDirection: { xs: "column", md: "row" } }}>
+            sx={{ flexDirection: { xs: "column", md: "row" } }}
+          >
             <DateFieldInput
               label="Data inicial"
               value={values.date_start || undefined}
@@ -148,7 +152,7 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
                 onChange={(e) =>
                   handleChange(
                     "min",
-                    parseFloat(e.target.value) > 0 ? e.target.value : 0
+                    parseFloat(e.target.value) > 0 ? e.target.value : 0,
                   )
                 }
                 fullWidth
@@ -162,7 +166,7 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
                 onChange={(e) =>
                   handleChange(
                     "max",
-                    parseFloat(e.target.value) > 0 ? e.target.value : 0
+                    parseFloat(e.target.value) > 0 ? e.target.value : 0,
                   )
                 }
                 placeholder="0,00"
@@ -182,7 +186,8 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
             </Typography>
             <FormGroup
               row
-              sx={{ justifyContent: "flex-start", flexDirection: "column" }}>
+              sx={{ justifyContent: "flex-start", flexDirection: "column" }}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
@@ -225,7 +230,8 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
                 fontWeight: 600,
                 fontSize: 18,
                 backgroundColor: theme.palette.primary.main,
-              }}>
+              }}
+            >
               Filtrar
             </Button>
           </DialogActions>

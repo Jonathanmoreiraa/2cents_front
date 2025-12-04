@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import theme from '../theme';
+import styled from "styled-components";
+import theme from "../theme";
 export const LayoutContainer = styled.div`
   display: flex;
   min-height: 100vh;
@@ -22,10 +22,10 @@ export const MainContent = styled.main`
 
   @media (max-width: 900px) {
     margin-left: 0;
-    padding: 16px 4vw 0 4vw;
+    padding: 16px 4vw 56px 4vw;
     margin-top: 56px;
     width: 100%;
-    height: calc(100vh - 56px);
+    min-height: calc(100vh - 56px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
@@ -76,14 +76,15 @@ export const ResponsiveSidebar = styled.div<{ open: boolean }>`
     z-index: 250;
     background: ${theme.palette.primary.main};
     margin-top: 54px;
-    transform: ${({ open }) => (open ? 'translateX(0)' : 'translateX(-100%)')};
+    transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
     transition: transform 0.3s;
-    box-shadow: ${({ open }) => (open ? '2px 0 16px rgba(0,0,0,0.12)' : 'none')};
+    box-shadow: ${({ open }) =>
+      open ? "2px 0 16px rgba(0,0,0,0.12)" : "none"};
   }
 `;
 
 export const Overlay = styled.div<{ open: boolean }>`
-  display: ${({ open }) => (open ? 'block' : 'none')};
+  display: ${({ open }) => (open ? "block" : "none")};
   position: fixed;
   top: 0;
   left: 0;
@@ -111,7 +112,7 @@ export const IconButton = styled.button`
 `;
 
 export const NotificationDot = styled.span`
-  background: #FF5A5F;
+  background: #ff5a5f;
   border-radius: 50%;
   width: 16px;
   height: 16px;
@@ -144,6 +145,6 @@ export const OverlayNotification = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(240,240,240,0.7);
+  background: rgba(240, 240, 240, 0.7);
   z-index: 399;
-`; 
+`;
