@@ -12,8 +12,19 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
-import { Box, Container, Grid, Typography, Paper, useMediaQuery } from "@mui/material";
-import { StyledGrid } from "../components/common/common-components.styles";
+import {
+  Box,
+  Container,
+  Grid,
+  Typography,
+  Paper,
+  useMediaQuery,
+  Popover,
+} from "@mui/material";
+import {
+  IconInfoOutlined,
+  StyledGrid,
+} from "../components/common/common-components.styles";
 import { BarChartDataType, DoughnutChartType, TaxesTable } from "../types";
 import { formatToMoney } from "../utils/format-money";
 import { generateRandomColor } from "../utils/generate-random-color";
@@ -89,7 +100,7 @@ const Home: React.FC = () => {
   const [situationDataset, setSituationDataset] =
     useState<DoughnutChartType>(defaultChart);
   const [totalExpenses, setTotalExpenses] = useState<number>(0);
-  const [totalRecipes, setTotalRecipes] = useState<number>(0);
+  const [totalReceivedRevenue, setTotalReceivedRevenues] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);
   const [situationMessage, setSituationMessage] = useState<string>("");
   const [situationColor, setSituationColor] = useState<string>("");
@@ -102,6 +113,11 @@ const Home: React.FC = () => {
     responsive: true,
     maintainAspectRatio: false,
   };
+  const [anchorElSituation, setAnchorElSituation] =
+    React.useState<SVGSVGElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<SVGSVGElement | null>(null);
+  const openPopSituation = Boolean(anchorElSituation);
+  const openPopControl = Boolean(anchorEl);
 
   // Category Doughnut Chart
   const [categoryDataset, setCategoryDataset] =
@@ -123,6 +139,23 @@ const Home: React.FC = () => {
         },
       },
       tooltip: { enabled: true },
+    },
+  };
+
+  const [controlDataset, setControlDataset] =
+    useState<BarChartDataType>(defaultChart);
+  const controlOptions: object = {
+    indexAxis: "x",
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, title: { display: false } },
+    scales: {
+      x: { grid: { display: false, drawBorder: false } },
+      y: {
+        beginAtZero: true,
+        ticks: { stepSize: 500 },
+        grid: { color: "#e0e0e0", drawBorder: false },
+      },
     },
   };
 
@@ -158,7 +191,7 @@ const Home: React.FC = () => {
 
       const datasets = [
         {
-          label: "Receitas",
+          label: "Receitas recebidas",
           data: receitaData,
           backgroundColor: theme.palette.primary.main,
         },
@@ -176,15 +209,20 @@ const Home: React.FC = () => {
   const getSituationData = async () => {
     const response = await api.get(`/api/dashboard/month-situation`);
     if (response.data) {
-      const labels = ["Despesas", "Saldo"];
-
       const { revenues, expenses } = response.data;
       const totalRevenue = revenues[0].total ?? 0;
       const totalExpense = expenses[0].total ?? 0;
 
+      const balance = totalRevenue - totalExpense;
+
+      const resultPercentage =
+        totalRevenue > 0 ? Math.round((totalExpense / totalRevenue) * 100) : 0;
+
+      const formattedBalance = formatToMoney(Math.abs(balance)); // Usamos Math.abs para formatar sem o sinal aqui, ele será adicionado na mensagem.
+
       const datasets = [
         {
-          data: [totalExpense, Math.max(totalRevenue - totalExpense, 0)],
+          data: [totalExpense, Math.max(balance, 0)],
           backgroundColor: [
             theme.palette.error.main,
             theme.palette.primary.main,
@@ -193,38 +231,36 @@ const Home: React.FC = () => {
         },
       ];
 
-      const resultPercentage =
-        totalRevenue > 0 ? Math.round((totalExpense / totalRevenue) * 100) : 0;
+      let message = "";
+      let color = "";
 
-      switch (true) {
-        case resultPercentage <= 55:
-          setSituationMessage(
-            "Parabéns! Seu planejamento financeiro está funcionando muito bem.",
-          );
-          setSituationColor(theme.palette.primary.main);
-          break;
-
-        case resultPercentage <= 85:
-          setSituationMessage(
-            "Você gastou acima do recomendado, mas ainda está no controle. Atente-se!",
-          );
-          setSituationColor(theme.palette.warning.main);
-          break;
-
-        default:
-          setSituationMessage(
-            "Este mês seus gastos foram muito altos. Ajustes são recomendados para evitar problemas financeiros.",
-          );
-          setSituationColor(theme.palette.error.main);
+      if (
+        !Number.isFinite(resultPercentage) ||
+        (totalRevenue === 0 && totalExpense > 0)
+      ) {
+        message =
+          "Não foi possível calcular a situação. Há despesas sem receita registrada.";
+        color = theme.palette.grey[500];
+      } else if (balance < 0) {
+        const percentExcess = resultPercentage - 100;
+        message = `Faltou ${formattedBalance} para cobrir seus gastos, que excederam a receita recebida em ${percentExcess}%. Ajustes são urgentes!`;
+        color = theme.palette.error.main;
+      } else if (resultPercentage <= 55) {
+        message = `Parabéns! Seu planejamento está excelente. Este mês, você economizou ${formattedBalance}.`;
+        color = theme.palette.primary.main;
+      } else if (resultPercentage <= 85) {
+        message = `Você economizou ${formattedBalance} este mês. No entanto, os gastos foram acima do ideal. Fique atento(a)!`;
+        color = theme.palette.warning.main;
+      } else {
+        message = `Seus gastos estão muito próximos da sua receita recebida. Você economizou ${formattedBalance}. Atenção redobrada é crucial!`;
+        color = theme.palette.warning.main;
       }
 
-      if (!Number.isFinite(resultPercentage)) {
-        setSituationMessage("Não foi possível calcular a situação deste mês.");
-        setSituationColor(theme.palette.grey[500]);
-      }
-
+      const labels = ["Despesas", "Saldo"];
+      setSituationMessage(message);
+      setSituationColor(color);
       setTotalExpenses(totalExpense);
-      setTotalRecipes(totalRevenue);
+      setTotalReceivedRevenues(totalRevenue);
       setPercentage(resultPercentage);
       setSituationDataset({ labels, datasets });
     }
@@ -264,43 +300,54 @@ const Home: React.FC = () => {
     }
   };
 
-  const controlData = {
-    labels: [""],
-    datasets: [
-      {
-        label: "Orçamento",
-        data: [totalRecipes],
-        backgroundColor: theme.palette.primary.main,
-        maxBarThickness: 40,
-      },
-      {
-        label: "Gasto real",
-        data: [totalExpenses],
-        backgroundColor: theme.palette.error.main,
-        maxBarThickness: 40,
-      },
-    ],
+  const getControlData = async () => {
+    const response = await api.get(
+      `/api/dashboard/month-situation?received=false`,
+    );
+    if (response.data) {
+      const controlData = {
+        labels: [""],
+        datasets: [
+          {
+            label: "Orçamento",
+            data: [response.data.revenues[0]?.total || 0],
+            backgroundColor: theme.palette.primary.main,
+            maxBarThickness: 40,
+          },
+          {
+            label: "Gasto real",
+            data: [response.data.expenses[0]?.total || 0],
+            backgroundColor: theme.palette.error.main,
+            maxBarThickness: 40,
+          },
+        ],
+      };
+
+      setControlDataset(controlData);
+    }
   };
 
-  const controlOptions: object = {
-    indexAxis: "x",
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false }, title: { display: false } },
-    scales: {
-      x: { grid: { display: false, drawBorder: false } },
-      y: {
-        beginAtZero: true,
-        ticks: { stepSize: 500 },
-        grid: { color: "#e0e0e0", drawBorder: false },
-      },
-    },
+  const handleClickControl = (event: React.MouseEvent<SVGSVGElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseControl = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClickSituation = (event: React.MouseEvent<SVGSVGElement>) => {
+    setAnchorElSituation(event.currentTarget);
+  };
+
+  const handleCloseSituation = () => {
+    setAnchorElSituation(null);
   };
 
   useEffect(() => {
     getRevenuesExpensesData();
     getSituationData();
     getExpenseByCategoryData();
+    getControlData();
     getTaxes();
   }, []);
 
@@ -316,18 +363,61 @@ const Home: React.FC = () => {
         <StyledGrid>
           <Paper
             elevation={3}
-            sx={{ p: 2, height: "100%", textAlign: "center", width: isMobile ? "100%" : "21rem" }}
+            sx={{
+              p: 2,
+              height: "100%",
+              textAlign: "center",
+              width: isMobile ? "100%" : "21rem",
+            }}
           >
-            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
-              Situação mensal
-            </Typography>
+            <Box
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                textAlign={"center"}
+                width={"100%"}
+              >
+                Situação mensal
+              </Typography>
+              <IconInfoOutlined
+                aria-describedby={"situation-popover"}
+                style={{ color: theme.palette.info.main }}
+                onClick={handleClickSituation}
+              />
+              <Popover
+                id={"situation-popover"}
+                open={openPopSituation}
+                anchorEl={anchorElSituation}
+                onClose={handleCloseSituation}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+              >
+                <Typography sx={{ p: 1, fontSize: 12, width: 300 }}>
+                  Este gráfico representa o quanto dos seus ganhos mensais foi
+                  consumido por seus gastos.
+                </Typography>
+              </Popover>
+            </Box>
 
             <Box
               sx={{
                 position: "relative",
-                width: 200,
+                width: 240,
                 height: 200,
                 mx: "auto",
+                mt: 3,
               }}
             >
               <Doughnut data={situationDataset} options={doughnutOptions} />
@@ -365,8 +455,8 @@ const Home: React.FC = () => {
               <Box
                 display="flex"
                 justifyContent="space-between"
-                width={200}
                 mb={1}
+                width={240}
               >
                 <Box display="flex" alignItems="center">
                   <Box
@@ -378,14 +468,13 @@ const Home: React.FC = () => {
                       mr: 1,
                     }}
                   />
-                  <Typography>Receitas</Typography>
+                  <Typography>Receita recebida</Typography>
                 </Box>
                 <Typography fontWeight="bold">
-                  {formatToMoney(totalRecipes)}
+                  {formatToMoney(totalReceivedRevenue)}
                 </Typography>
               </Box>
-
-              <Box display="flex" justifyContent="space-between" width={200}>
+              <Box display="flex" justifyContent="space-between" width={240}>
                 <Box display="flex" alignItems="center">
                   <Box
                     sx={{
@@ -416,8 +505,12 @@ const Home: React.FC = () => {
       >
         <StyledGrid>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
-            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-              Despesas por categoria (R$)
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ mb: 2, textAlign: "center" }}
+            >
+              Gasto mensal por categoria (R$)
             </Typography>
             <Box height={280}>
               <Doughnut data={categoryDataset} options={categoryOptions} />
@@ -426,11 +519,47 @@ const Home: React.FC = () => {
         </StyledGrid>
         <StyledGrid>
           <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
-            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-              Controle mensal
-            </Typography>
+            <Box
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ mb: 2, textAlign: "center", width: "100%" }}
+              >
+                Controle geral mensal
+              </Typography>
+              <IconInfoOutlined
+                aria-describedby={"mensal-control"}
+                style={{ color: theme.palette.info.main }}
+                onClick={handleClickControl}
+              />
+              <Popover
+                id={"mensal-control"}
+                open={openPopControl}
+                anchorEl={anchorEl}
+                onClose={handleCloseControl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+              >
+                <Typography sx={{ p: 1, fontSize: 12, width: 300 }}>
+                  Este gráfico de controle compara o seu orçamento mensal (que
+                  inclui receitas já recebidas e as que ainda estão a receber)
+                  com os gastos reais do período.
+                </Typography>
+              </Popover>
+            </Box>
             <Box height={250}>
-              <Bar data={controlData} options={controlOptions} />
+              <Bar data={controlDataset} options={controlOptions} />
             </Box>
 
             <Box

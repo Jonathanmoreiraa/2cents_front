@@ -171,6 +171,7 @@ const Sidebar: React.FC = () => {
           onClick={() => {
             setFinancasOpen(false);
             navigate("/");
+            setSelected("/");
           }}
         >
           <FaChartBar style={{ marginRight: 16 }} /> Dashboard
@@ -179,7 +180,7 @@ const Sidebar: React.FC = () => {
           selected={selected === "/receitas" || selected === "/despesas"}
           onClick={() => setFinancasOpen(!financasOpen)}
         >
-          <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças{" "}
+          <FaMoneyBillWave style={{ marginRight: 16 }} /> Finanças
           <FaChevronDown
             style={{
               marginLeft: "auto",
@@ -192,13 +193,19 @@ const Sidebar: React.FC = () => {
           <SubMenu>
             <SubMenuItem
               selected={selected === "/receitas"}
-              onClick={() => navigate("/receitas")}
+              onClick={() => {
+                navigate("/receitas");
+                setSelected("/receitas");
+              }}
             >
               Receitas
             </SubMenuItem>
             <SubMenuItem
               selected={selected === "/despesas"}
-              onClick={() => navigate("/despesas")}
+              onClick={() => {
+                navigate("/despesas");
+                setSelected("/despesas");
+              }}
             >
               Despesas
             </SubMenuItem>
@@ -209,6 +216,7 @@ const Sidebar: React.FC = () => {
           onClick={() => {
             navigate("/caixinhas");
             setFinancasOpen(false);
+            setSelected("/caixinhas");
           }}
         >
           <FaWallet style={{ marginRight: 16 }} /> Caixinhas
@@ -218,6 +226,7 @@ const Sidebar: React.FC = () => {
           onClick={() => {
             setFinancasOpen(false);
             navigate("/configuracoes");
+            setSelected("/configuracoes");
           }}
         >
           <FaCog style={{ marginRight: 16 }} /> Configurações

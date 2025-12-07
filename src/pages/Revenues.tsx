@@ -26,6 +26,7 @@ import RevenueEditModal from "../components/modals/RevenueEditModal";
 import { ApiRevenue, Revenue } from "../types";
 import theme from "../theme";
 import { getFirstAndLastDayOfMonth } from "../utils/get-first-last-days-month";
+import { formatToMoney } from "../utils/format-money";
 
 const headers: DataTableHeader<Revenue>[] = [
   { label: "Situação", key: "status" },
@@ -227,6 +228,7 @@ const Revenues: React.FC = () => {
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
         onFilter={handleFilter}
+        initialValues={defaultFilterValues}
       />
       <RevenueCreateModal
         open={modalAddOpen}
@@ -254,9 +256,7 @@ const Revenues: React.FC = () => {
               );
             }
             if (key === "value") {
-              return `R$ ${item.value.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.value);
             }
             if (key === "dueDate") {
               return new Date(item.dueDate).toLocaleDateString("pt-BR");

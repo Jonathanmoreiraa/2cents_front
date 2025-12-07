@@ -25,6 +25,7 @@ import ExpenseFilterModal from "../components/modals/ExpenseFilterModal";
 import { FilterValues } from "../components/modals/ExpenseFilterModal";
 import ExpenseEditModal from "../components/modals/ExpenseEditModal";
 import { getFirstAndLastDayOfMonth } from "../utils/get-first-last-days-month";
+import { formatToMoney } from "../utils/format-money";
 
 const headers: GenericCardListHeader<Expense>[] = [
   { label: "Situação", key: "situation" },
@@ -301,9 +302,7 @@ const Expenses = () => {
               );
             }
             if (key === "value") {
-              return `R$ ${Number(item.value).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.value);
             }
             if (key === "due_date") {
               return new Date(item.due_date).toLocaleDateString("pt-BR");
@@ -350,9 +349,7 @@ const Expenses = () => {
               );
             }
             if (key === "value") {
-              return `R$ ${Number(item.value).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.value);
             }
             if (key === "due_date") {
               return new Date(item.due_date).toLocaleDateString("pt-BR");

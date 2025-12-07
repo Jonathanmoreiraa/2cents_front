@@ -51,7 +51,7 @@ export const StatusTypography = styled(Typography)<{ status: string }>(
   ({ status }) => ({
     fontWeight: 700,
     color:
-      status === "Received" || status === "Paga"
+      status === "Received" || status === "Paga" || status === "Concluída"
         ? theme.palette.primary.main
         : status === "Próxima do vencimento"
           ? "#B0A748"

@@ -89,6 +89,7 @@ export interface BarChartDataType {
     label: string;
     data: number[];
     backgroundColor?: string;
+    maxBarThickness?: number;
   }[];
 }
 

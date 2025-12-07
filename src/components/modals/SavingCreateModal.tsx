@@ -43,7 +43,7 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
   const [description, setDescription] = useState("");
   const [accumulated, setAccumulated] = useState<number | null>(0);
   const [goal, setGoal] = useState("");
-  const [monthsToGoal, setMonthsToGoal] = useState(0);
+  const [monthsToGoal, setMonthsToGoal] = useState<number | undefined>(0);
   const [shouldBeExpense, setShouldBeExpense] = useState(false);
   const [isEmergencyFund, setIsEmergencyFund] = useState(false);
   const [cdb, setCdb] = useState(0);
@@ -62,7 +62,7 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
       accumulated,
       description: isEmergencyFund ? "Reserva de emergência" : description,
       goal: Number(goal),
-      months_to_goal: monthsToGoal,
+      months_to_goal: monthsToGoal ?? 0,
       should_be_expense: shouldBeExpense ? 1 : 0,
     });
   };
@@ -96,7 +96,9 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
   }, [open]);
 
   useEffect(() => {
-    if (Number(goal) > 0 && monthsToGoal > 1) {
+    setCdb(0);
+    setPoupanca(0);
+    if (Number(goal) > 0 && monthsToGoal && monthsToGoal > 1) {
       handleSimulation();
     }
   }, [monthsToGoal, accumulated, goal]);
@@ -175,7 +177,11 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
           />
           <StyledTextField
             label="Valor acumulado (R$)"
-            onChange={(e) => setAccumulated(Number(e.target.value))}
+            onChange={(e) =>
+              e.target.value == ""
+                ? setAccumulated(null)
+                : setAccumulated(Number(e.target.value))
+            }
             fullWidth
             required
             margin="normal"
@@ -194,7 +200,11 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
           )}
           <StyledTextField
             label="Quantidade de meses para alcançar a meta"
-            onChange={(e) => setMonthsToGoal(Number(e.target.value))}
+            onChange={(e) =>
+              e.target.value == ""
+                ? setMonthsToGoal(undefined)
+                : setMonthsToGoal(Number(e.target.value))
+            }
             fullWidth
             required
             margin="normal"
@@ -260,7 +270,10 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
               <Typography mt={1} mb={1} fontSize={14} color="text.secondary">
                 Para alcançar a meta de {formatToMoney(Number(goal))} em{" "}
                 {monthsToGoal} {months}, você precisará guardar aproximadamente{" "}
-                <b>{formatToMoney(Number(goal) / monthsToGoal)} por mês</b>.
+                <b>
+                  {formatToMoney(Number(goal) / (monthsToGoal ?? 1))} por mês
+                </b>
+                .
               </Typography>
               <Typography mt={1} mb={1} fontSize={14} color="text.secondary">
                 Caso esse valor não se encaixe no seu orçamento mensal,
@@ -268,8 +281,9 @@ const SavingCreateModal: React.FC<SavingCreateModalProps> = ({
                 Isso fará com que o valor mensal a ser poupado diminua.
               </Typography>
               <Typography mt={1} mb={1} fontSize={14} color="text.secondary">
-                Investindo <b>{formatToMoney(Number(goal) / monthsToGoal)}</b>{" "}
-                por <b>{monthsToGoal}</b> {months}
+                Investindo{" "}
+                <b>{formatToMoney(Number(goal) / (monthsToGoal ?? 1))}</b> por{" "}
+                <b>{monthsToGoal}</b> {months}
                 {accumulated
                   ? ` + ${formatToMoney(accumulated)} já acumulado`
                   : ""}

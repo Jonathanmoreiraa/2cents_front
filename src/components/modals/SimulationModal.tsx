@@ -29,7 +29,7 @@ interface SimulationModalProps {
 
 const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
   const [goal, setGoal] = useState("");
-  const [monthsToGoal, setMonthsToGoal] = useState(1);
+  const [monthsToGoal, setMonthsToGoal] = useState<number | undefined>(1);
   const [cdb, setCdb] = useState(0);
   const [poupanca, setPoupanca] = useState(0);
   const [isLoadingSimulation, setIsLoadingSimulation] = useState(false);
@@ -51,7 +51,7 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
     if (goal && monthsToGoal) {
       const res = await api.post("/api/rendiments", {
         initial_value: Number(goal),
-        months: monthsToGoal,
+        months: monthsToGoal ?? 1,
       });
       if (res.data) {
         setCdb(res.data.cdb);
@@ -65,6 +65,11 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
     setGoal("");
     setMonthsToGoal(1);
   }, [open]);
+
+  useEffect(() => {
+    setCdb(0);
+    setPoupanca(0);
+  }, [goal, monthsToGoal]);
 
   return (
     <Dialog
@@ -106,7 +111,11 @@ const SimulationModal: React.FC<SimulationModalProps> = ({ open, onClose }) => {
           <StyledTextField
             label="Quantidade de meses que o dinheiro ficará investido"
             value={monthsToGoal}
-            onChange={(e) => setMonthsToGoal(Number(e.target.value))}
+            onChange={(e) =>
+              e.target.value == ""
+                ? setMonthsToGoal(undefined)
+                : setMonthsToGoal(Number(e.target.value))
+            }
             fullWidth
             required
             margin="normal"

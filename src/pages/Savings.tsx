@@ -23,6 +23,12 @@ import GenericCardList, {
   GenericCardListHeader,
 } from "../components/data-table/GenericCardList";
 import SavingEditModal from "../components/modals/SavingEditModal";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import SavingFilterModal, {
+  FilterValues,
+} from "../components/modals/SavingFilterModal";
+import { formatToMoney } from "../utils/format-money";
+import { StatusTypography } from "../components/data-table/data-table.styles";
 
 const headers: DataTableHeader<Saving>[] = [
   { label: "Prioridade", key: "priority" },
@@ -44,6 +50,7 @@ const Savings: React.FC = () => {
   const [savings, setSavings] = useState<Saving[]>([]);
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
+  const [modalFilterOpen, setModalFilterOpen] = useState(false);
   const [modalSimulationOpen, setModalSimulationOpen] = useState(false);
   const [savingData, setSavingData] = useState<Saving | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,12 +66,22 @@ const Savings: React.FC = () => {
     (page - 1) * ITEMS_PER_PAGE,
     page * ITEMS_PER_PAGE,
   );
+  const [defaultFilterValues, setDefaultFilterValues] = useState<FilterValues>({
+    description: "",
+    status: {
+      pending: false,
+      completed: false,
+    },
+  });
 
   const handleOpenAddModal = () => setModalAddOpen(true);
   const handleOpenSimulationModal = () => setModalSimulationOpen(true);
+  const handleOpenFilterModal = () => setModalFilterOpen(true);
+
   const handleCloseAddModal = () => setModalAddOpen(false);
   const handleCloseSimulationModal = () => setModalSimulationOpen(false);
   const handleCloseEditModal = () => setModalEditOpen(false);
+  const handleCloseFilterModal = () => setModalFilterOpen(false);
 
   const handleOpenEditModal = (data: Saving) => {
     setSavingData(data);
@@ -85,6 +102,18 @@ const Savings: React.FC = () => {
     try {
       const res = await api.get("/api/savings");
       setSavings(res.data);
+    } catch (err) {
+      handleError(err);
+    }
+
+    setLoading(false);
+  };
+
+  const handleFilterSavings = async (filterValues: FilterValues) => {
+    try {
+      const res = await api.post("/api/saving/filter", filterValues);
+      setSavings(res.data);
+      setDefaultFilterValues(res.data ?? defaultFilterValues);
     } catch (err) {
       handleError(err);
     }
@@ -169,6 +198,13 @@ const Savings: React.FC = () => {
           <ActionButton
             variant="outlined"
             color="success"
+            onClick={handleOpenFilterModal}
+          >
+            <FilterListIcon />
+          </ActionButton>
+          <ActionButton
+            variant="outlined"
+            color="success"
             onClick={handleOpenSimulationModal}
             endIcon={<WalletIcon />}
           >
@@ -200,19 +236,23 @@ const Savings: React.FC = () => {
         open={modalSimulationOpen}
         onClose={handleCloseSimulationModal}
       />
+      <SavingFilterModal
+        open={modalFilterOpen}
+        onClose={handleCloseFilterModal}
+        onFilter={handleFilterSavings}
+        initialValues={defaultFilterValues}
+      />
       {isMobile ? (
         <GenericCardList
           items={paginated}
           headers={cardHeaders}
           renderItem={(item, key) => {
             if (key === "goal") {
-              return `R$ ${item.goal.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.goal);
             } else if (key === "accumulated") {
-              return `R$ ${item.accumulated.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.accumulated);
+            } else if (key === "priority" && item.priority === 0) {
+              return null;
             }
             return item[key];
           }}
@@ -245,13 +285,15 @@ const Savings: React.FC = () => {
           headers={headers}
           renderCell={(item, key) => {
             if (key === "goal") {
-              return `R$ ${item.goal.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.goal);
             } else if (key === "accumulated") {
-              return `R$ ${item.accumulated.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}`;
+              return formatToMoney(item.accumulated);
+            } else if (key === "priority" && item.priority === 0) {
+              return (
+                <StatusTypography status={"Concluída"}>
+                  Concluída
+                </StatusTypography>
+              );
             }
             return item[key];
           }}

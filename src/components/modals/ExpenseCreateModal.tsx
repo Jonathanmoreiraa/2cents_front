@@ -312,7 +312,11 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                 label="Nº de parcelas"
                 value={installments || ""}
                 type="number"
-                onChange={(e) => setInstallments(Number(e.target.value))}
+                onChange={(e) =>
+                  e.target.value == ""
+                    ? setInstallments(undefined)
+                    : setInstallments(Number(e.target.value))
+                }
                 margin="normal"
                 sx={{ width: { xs: "100%", md: "75%" } }}
               />
@@ -320,7 +324,11 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({
                 label="Dia mensal de pagamento"
                 value={paymentDay || ""}
                 type="number"
-                onChange={(e) => setPaymentDay(Number(e.target.value))}
+                onChange={(e) =>
+                  e.target.value == ""
+                    ? setPaymentDay(undefined)
+                    : setPaymentDay(Number(e.target.value))
+                }
                 margin="normal"
                 sx={{ width: { xs: "100%", md: "75%" } }}
               />

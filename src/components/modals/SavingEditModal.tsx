@@ -34,12 +34,17 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({
   initialValues,
 }) => {
   const [description, setDescription] = useState("");
-  const [accumulated, setAccumulated] = useState(0);
+  const [accumulated, setAccumulated] = useState<number | null>(0);
   const [goal, setGoal] = useState("");
-  const [priority, setPriority] = useState(0);
+  const [priority, setPriority] = useState<number | null>(null);
   const [shouldBeExpense, setShouldBeExpense] = useState(false);
   const [isEmergencyFund, setIsEmergencyFund] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<SVGSVGElement | null>(null);
+  const [anchorElGoal, setAnchorElGoal] = React.useState<SVGSVGElement | null>(
+    null,
+  );
+  const openPopGoal = Boolean(anchorElGoal);
+
   const openPopEmergencyFund = Boolean(anchorEl);
   const idPopEmergency = openPopEmergencyFund ? "simple-popover" : undefined;
 
@@ -48,11 +53,11 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({
     onSubmit({
       id: initialValues!.id,
       is_emergency_fund: isEmergencyFund ? 1 : 0,
-      accumulated,
+      accumulated: accumulated ?? 0,
       description: isEmergencyFund ? "Reserva de emergência" : description,
       goal: Number(goal),
       should_be_expense: shouldBeExpense ? 1 : 0,
-      priority: priority,
+      priority: priority ?? 0,
     });
   };
 
@@ -60,6 +65,14 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({
     setAnchorEl(event.currentTarget);
 
   const handleCloseSimulation = () => setAnchorEl(null);
+
+  const handleClickGoalInfo = (event: React.MouseEvent<SVGSVGElement>) => {
+    setAnchorElGoal(event.currentTarget);
+  };
+
+  const handleCloseGoalInfo = () => {
+    setAnchorElGoal(null);
+  };
 
   useEffect(() => {
     setDescription(initialValues?.description || "");
@@ -137,26 +150,71 @@ const SavingEditModal: React.FC<SavingEditModalProps> = ({
           <StyledTextField
             label="Prioridade"
             value={priority}
-            onChange={(e) => setPriority(Number(e.target.value))}
+            onChange={(e) =>
+              e.target.value == ""
+                ? setPriority(null)
+                : setPriority(Number(e.target.value))
+            }
             fullWidth
             required
             margin="normal"
             type="number"
             inputProps={{ min: 1 }}
           />
-          <StyledTextField
-            label="Meta (R$)"
-            value={goal}
-            onChange={(e) => setGoal(e.target.value)}
-            fullWidth
-            required
-            margin="normal"
-            type="number"
-          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <StyledTextField
+              label="Meta (R$)"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              fullWidth
+              required
+              margin="normal"
+              type="number"
+            />
+            <IconInfoOutlined
+              aria-describedby={"goal-popover"}
+              style={{
+                color: theme.palette.info.main,
+                marginLeft: 6,
+                cursor: "pointer",
+              }}
+              onClick={handleClickGoalInfo}
+            />
+            <Popover
+              id={"goal-popover"}
+              open={openPopGoal}
+              anchorEl={anchorElGoal}
+              onClose={handleCloseGoalInfo}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <Typography sx={{ p: 1, fontSize: 12, width: 300 }}>
+                Se essa caixinha estiver relacionada a alguma despesa, a edição
+                da meta não será atualizada automaticamente nas despesas
+                vinculadas a ela.
+              </Typography>
+            </Popover>
+          </Box>
           <StyledTextField
             label="Valor acumulado (R$)"
             value={accumulated}
-            onChange={(e) => setAccumulated(Number(e.target.value))}
+            onChange={(e) =>
+              e.target.value == ""
+                ? setAccumulated(null)
+                : setAccumulated(Number(e.target.value))
+            }
             fullWidth
             required
             margin="normal"

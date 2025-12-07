@@ -14,23 +14,17 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import StyledTextField from "../common/StyledTextField";
-import DateFieldInput from "../common/DateFieldInput";
 import theme from "../../theme";
 
 export interface FilterValues {
   description: string;
-  date_start: Date | null;
-  date_end: Date | null;
-  min: number;
-  max: number;
   status: {
-    received: boolean;
+    completed: boolean;
     pending: boolean;
-    overdue: boolean;
   };
 }
 
-interface RevenueFilterModalProps {
+interface SavingFilterModalProps {
   open: boolean;
   onClose: () => void;
   onFilter: (values: FilterValues) => void;
@@ -39,18 +33,13 @@ interface RevenueFilterModalProps {
 
 const defaultValues: FilterValues = {
   description: "",
-  date_start: null,
-  date_end: null,
-  min: 0,
-  max: 0,
   status: {
-    received: false,
+    completed: false,
     pending: false,
-    overdue: false,
   },
 };
 
-const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
+const SavingFilterModal: React.FC<SavingFilterModalProps> = ({
   open,
   onClose,
   onFilter,
@@ -60,7 +49,6 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
     initialValues ?? defaultValues,
   );
 
-  //TODO: verificar se o valor é um número ou string
   const handleChange = (
     field: keyof FilterValues,
     value: string | Date | null | number,
@@ -72,14 +60,6 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
     setValues((prev) => ({
       ...prev,
       status: { ...prev.status, [status]: !prev.status[status] },
-    }));
-  };
-
-  const handleClearDates = () => {
-    setValues((prev) => ({
-      ...prev,
-      date_start: null,
-      date_end: null,
     }));
   };
 
@@ -112,7 +92,7 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
       aria-describedby="filter-dialog-description"
     >
       <DialogTitle id="filter-dialog-title" sx={{ fontSize: 28, pb: 0 }}>
-        Filtrar receitas
+        Filtrar caixinhas
         <IconButton
           onClick={onClose}
           sx={{ position: "absolute", right: 16, top: 16 }}
@@ -138,102 +118,14 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
             variant="outlined"
             sx={{ mb: 4 }}
           />
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            sx={{ flexDirection: { xs: "column", md: "row" } }}
-          >
-            <DateFieldInput
-              label="Data inicial"
-              value={values.date_start || undefined}
-              onChange={(newValue) => handleChange("date_start", newValue)}
-              sx={{ mb: 2 }}
-            />
-            <DateFieldInput
-              label="Data final"
-              value={values.date_end || undefined}
-              onChange={(newValue) => handleChange("date_end", newValue)}
-            />
-          </Box>
-          {(values.date_start || values.date_end) && (
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              mb={2}
-              sx={{
-                flexDirection: { xs: "column", md: "row" },
-                mt: { xs: 2, md: 0 },
-              }}
-            >
-              <Button
-                onClick={handleClearDates}
-                variant="outlined"
-                sx={{
-                  mr: 2,
-                  fontSize: 10,
-                  fontWeight: 600,
-                  borderRadius: 999,
-                }}
-              >
-                Limpar Datas
-              </Button>
-            </Box>
-          )}
-          <Box display="flex" gap={2} mb={3}>
-            <Box display="flex" flexDirection="column" flex={1}>
-              <Typography mb={0.5}>De:</Typography>
-              <StyledTextField
-                value={values.min}
-                onChange={(e) =>
-                  handleChange(
-                    "min",
-                    parseFloat(e.target.value) > 0 ? e.target.value : 0,
-                  )
-                }
-                fullWidth
-                // TODO: adicionar máscara de dinheiro
-              />
-            </Box>
-            <Box display="flex" flexDirection="column" flex={1}>
-              <Typography mb={0.5}>Até:</Typography>
-              <StyledTextField
-                value={values.max}
-                onChange={(e) =>
-                  handleChange(
-                    "max",
-                    parseFloat(e.target.value) > 0 ? e.target.value : 0,
-                  )
-                }
-                placeholder="0,00"
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                fullWidth
-                // TODO: adicionar máscara de dinheiro
-              />
-            </Box>
-          </Box>
           <Box mb={2}>
             <Typography align="center" fontWeight={600} fontSize={22} mb={1}>
-              Situações
+              Situação da caixinha
             </Typography>
             <FormGroup
               row
               sx={{ justifyContent: "flex-start", flexDirection: "column" }}
             >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="success"
-                    checked={values.status.received}
-                    onChange={() => handleStatusChange("received")}
-                  />
-                }
-                label="Recebida"
-              />
               <FormControlLabel
                 control={
                   <Checkbox
@@ -248,11 +140,11 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
                 control={
                   <Checkbox
                     color="success"
-                    checked={values.status.overdue}
-                    onChange={() => handleStatusChange("overdue")}
+                    checked={values.status.completed}
+                    onChange={() => handleStatusChange("completed")}
                   />
                 }
-                label="Em atraso"
+                label="Concluída"
               />
             </FormGroup>
           </Box>
@@ -277,4 +169,4 @@ const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({
   );
 };
 
-export default RevenueFilterModal;
+export default SavingFilterModal;
